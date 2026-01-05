@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: 'postgres:alpine3.23'
+    environment:
+      - 'POSTGRES_DB=scheduler'
+      - 'POSTGRES_PASSWORD=admin'
+      - 'POSTGRES_USER=admin'
+    ports:
+      - '5432:5432'
+  rabbitmq:
+    image: 'rabbitmq:4.3.0-management-alpine'
+    environment:
+      - 'RABBITMQ_DEFAULT_PASS=admin'
+      - 'RABBITMQ_DEFAULT_USER=admin'
+    ports:
+      - '5672:5672'
