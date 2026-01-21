@@ -1,10 +1,12 @@
 package com.hyuse98.scheduler.core.domain.model;
 
+import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.entities.ScheduleJpaEntity;
+
 import java.util.Date;
 import java.util.UUID;
 
 /**
- * DTO for {@link com.hyuse98.scheduler.core.infrastructure.persistance.jpa.entities.ScheduleEntity}
+ * DTO for {@link ScheduleJpaEntity}
  */
 public class Schedule {
 
