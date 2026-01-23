@@ -8,10 +8,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Classe de configuração especializada para o domínio de Cliente.
- * Mantém a criação de beans isolada, facilitando a modularização do sistema.
- */
 @Configuration
 public class ClientBeanConfig {
 

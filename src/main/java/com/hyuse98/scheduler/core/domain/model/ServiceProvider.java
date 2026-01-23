@@ -5,28 +5,34 @@ import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.entities.Servic
 import java.util.Date;
 import java.util.UUID;
 
-/**
- * DTO for {@link ServiceProviderJpaEntity}
- */
-public class ServiceProvider extends User{
+public class ServiceProvider{
 
-    String expertise;
-    String registry;
+    private final UUID id;
+    private String name;
+    private String email;
+    private String phoneNumber;
+    private Date birthday;
+    private String address;
+    private String expertise;
+    private String registry;
+    private final Date createdAt;
+    private Boolean isActive;
 
-    public ServiceProvider() {
+    public ServiceProvider(UUID id, Date createdAt) {
+        this.id = id;
+        this.createdAt = createdAt;
     }
 
-    public ServiceProvider(UUID id, String email, String password, String phoneNumber, String name, Date birthday, String address, Date createdAt, Boolean isActive, String expertise, String registry) {
-        super(id, email, password, phoneNumber, name, birthday, address, createdAt, isActive);
+    public ServiceProvider(UUID id, String name, String email, String phoneNumber, Date birthday, String address, Date createdAt, Boolean isActive, String expertise, String registry) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.birthday = birthday;
+        this.address = address;
+        this.createdAt = createdAt;
+        this.isActive = isActive;
         this.expertise = expertise;
         this.registry = registry;
-    }
-
-    public String getExpertise() {
-        return expertise;
-    }
-
-    public String getRegistry() {
-        return registry;
     }
 }

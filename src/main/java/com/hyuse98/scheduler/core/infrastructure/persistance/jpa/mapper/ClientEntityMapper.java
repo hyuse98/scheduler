@@ -12,50 +12,39 @@ public interface ClientEntityMapper {
 
     ClientDto toDto(Client client);
 
-    /**
-     * ObjectFactory para Reconstituição (Base de Dados -> Domínio)
-     * Utiliza o método 'reconstitute' que ignora validações de criação
-     * e apenas remonta o objeto que já existe no mundo real.
-     */
+    Client toDomain(ClientDto clientDto);
+
+    Client toDomain(ClientJpaEntity clientJpaEntity);
+
     @ObjectFactory
     default Client createClient(ClientJpaEntity entity) {
         return Client.reconstitute(
                 entity.getId(),
                 entity.getEmail(),
-                entity.getPassword(),
-                entity.getPhoneNumber(),
                 entity.getName(),
+                entity.getPhoneNumber(),
                 entity.getBirthday(),
                 entity.getAddress(),
+                entity.getCns(),
                 entity.getCreatedAt(),
-                entity.getIsActive(),
-                entity.getCNS()
+                entity.getIsActive()
         );
     }
 
-    /**
-     * ObjectFactory para Criação (DTO -> Domínio)
-     * Utiliza o método 'create' que dispara o validate() para garantir
-     * que os dados vindos do utilizador são válidos.
-     */
     @ObjectFactory
     default Client createClient(ClientDto dto) {
         return Client.create(
                 dto.id(),
                 dto.email(),
-                dto.password(),
-                dto.phoneNumber(),
                 dto.name(),
+                dto.phoneNumber(),
                 dto.birthday(),
                 dto.address(),
+                dto.cns(),
                 dto.createdAt(),
-                dto.isActive(),
-                dto.CNS()
+                dto.isActive()
         );
     }
-
-    Client toDomain(ClientDto clientDto);
-    Client toDomain(ClientJpaEntity clientJpaEntity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     ClientJpaEntity partialUpdate(ClientDto clientDto, @MappingTarget ClientJpaEntity clientJpaEntity);

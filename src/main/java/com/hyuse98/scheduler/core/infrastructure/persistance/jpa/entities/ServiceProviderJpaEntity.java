@@ -24,9 +24,6 @@ public class ServiceProviderJpaEntity {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "password")
-    private String password;
-
     @Column(name = "phone_number")
     private String phoneNumber;
 
@@ -75,14 +72,6 @@ public class ServiceProviderJpaEntity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getPhoneNumber() {

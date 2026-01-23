@@ -16,13 +16,10 @@ public class ClientJpaEntity {
     private UUID id;
 
     @Column(name = "cns")
-    private String CNS;
+    private String cns;
 
     @Column(name = "email")
     private String email;
-
-    @Column(name = "password")
-    private String password;
 
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -50,12 +47,12 @@ public class ClientJpaEntity {
         this.id = id;
     }
 
-    public String getCNS() {
-        return CNS;
+    public String getCns() {
+        return cns;
     }
 
-    public void setCNS(String CNS) {
-        this.CNS = CNS;
+    public void setCns(String CNS) {
+        this.cns = CNS;
     }
 
     public String getEmail() {
@@ -64,14 +61,6 @@ public class ClientJpaEntity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getPhoneNumber() {

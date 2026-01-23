@@ -1,9 +1,8 @@
 CREATE TABLE IF NOT EXISTS core.client
 (
     id           UUID NOT NULL,
-    name         VARCHAR(255),
     email        VARCHAR(255),
-    password     VARCHAR(255),
+    name         VARCHAR(255),
     phone_number VARCHAR(255),
     birthday     TIMESTAMP(6) WITHOUT TIME ZONE,
     address      VARCHAR(255),
@@ -18,7 +17,6 @@ CREATE TABLE IF NOT EXISTS core.service_provider
     id           UUID NOT NULL,
     name         VARCHAR(255),
     email        VARCHAR(255),
-    password     VARCHAR(255),
     phone_number VARCHAR(255),
     birthday     TIMESTAMP(6) WITHOUT TIME ZONE,
     address      VARCHAR(255),
