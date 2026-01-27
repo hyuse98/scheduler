@@ -1,6 +1,8 @@
 package com.hyuse98.scheduler.iam.infrastructure.api.advice;
 
 import jakarta.persistence.EntityExistsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,6 +17,8 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
      * Captura erros do Bean Validation (@Valid no DTO).
@@ -60,7 +64,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGeneralException(Exception ex) {
-        // Em um cenário real, você usaria um Logger aqui (ex: log.error("Erro crítico", ex))
+
+        LOG.error("Internal Error Occurred: {}", ex.getMessage(), ex);
+
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Ocorreu um erro interno no servidor.");
     }
 
