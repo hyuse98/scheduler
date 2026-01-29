@@ -3,6 +3,7 @@ package com.hyuse98.scheduler.core.infrastructure.messaging;
 import com.hyuse98.scheduler.core.application.dto.ClientDto;
 import com.hyuse98.scheduler.core.application.usecases.client.SaveClientUseCase;
 import com.hyuse98.scheduler.iam.UserRegisteredEvent;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ public class UserRegisteredListener {
         this.saveClientUseCase = saveClientUseCase;
     }
 
-    @ApplicationModuleListener
+    @RabbitListener(queues = "core.user.registered.queue")
     public void onUserRegistered(UserRegisteredEvent event) {
 
         ClientDto registrationDto = new ClientDto(
