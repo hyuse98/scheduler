@@ -6,6 +6,7 @@ import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ClientEn
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class ClientRepositoryImpl implements ClientRepository {
@@ -19,14 +20,26 @@ public class ClientRepositoryImpl implements ClientRepository {
     }
 
     @Override
-    public void save(Client client) {
+    public Client save(Client client) {
 
         var entity = clientEntityMapper.toEntity(client);
         clientJpaRepository.save(entity);
+
+        return clientEntityMapper.toDomain(entity);
+    }
+
+    @Override
+    public boolean existsById(UUID id) {
+        return clientJpaRepository.existsById(id);
     }
 
     @Override
     public Optional<Client> findByName(String name) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Client> findByEmail(String email) {
         return Optional.empty();
     }
 }
