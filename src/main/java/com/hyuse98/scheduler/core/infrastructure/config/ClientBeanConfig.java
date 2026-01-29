@@ -12,10 +12,14 @@ import org.springframework.context.annotation.Configuration;
 public class ClientBeanConfig {
 
     @Bean
-    public SaveClientUseCase saveClientUseCase(
-            ClientRepository clientRepository,
-            ApplicationEventPublisher eventPublisher,
-            ClientEntityMapper clientEntityMapper) {
+    public SaveClientUseCase saveClientUseCase(ClientRepository clientRepository, ApplicationEventPublisher eventPublisher, ClientEntityMapper clientEntityMapper) {
+        return new SaveClientUseCaseImpl(clientRepository, eventPublisher, clientEntityMapper);
+    }
+
+    @Bean
+    public DeleteClientUseCase deleteClientUseCase(ClientRepository clientRepository) {
+        return new DeleteClientUseCaseImpl(clientRepository);
+    }
 
         return new SaveClientUseCaseImpl(
                 clientRepository,

@@ -21,6 +21,8 @@ public class UserRegisteredListener {
     @RabbitListener(queues = "core.user.registered.queue")
     public void onUserRegistered(UserRegisteredEvent event) {
 
+        //TODO(Need Better Handling)
+
         ClientDto registrationDto = new ClientDto(
                 event.userId(),
                 event.userEmail(),

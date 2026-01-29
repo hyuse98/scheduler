@@ -21,11 +21,14 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public Client save(Client client) {
-
         var entity = clientEntityMapper.toEntity(client);
         clientJpaRepository.save(entity);
-
         return clientEntityMapper.toDomain(entity);
+    }
+
+    @Override
+    public void deleteById(UUID id) {
+        clientJpaRepository.deleteById(id);
     }
 
     @Override

@@ -12,9 +12,11 @@ import java.util.UUID;
 public class ClientController {
 
     private final SaveClientUseCase saveClientUseCase;
+    private final DeleteClientUseCase deleteClientUseCase;
 
     public ClientController(SaveClientUseCase saveClientUseCase) {
         this.saveClientUseCase = saveClientUseCase;
+        this.deleteClientUseCase = deleteClientUseCase;
     }
 
     @GetMapping
@@ -38,7 +40,7 @@ public class ClientController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteClient(@PathVariable UUID id){
-        //Todo()
+    public void deleteClient(@PathVariable UUID id) {
+        deleteClientUseCase.execute(id);
     }
 }

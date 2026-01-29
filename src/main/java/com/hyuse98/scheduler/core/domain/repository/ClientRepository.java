@@ -9,7 +9,9 @@ public interface ClientRepository {
 
     Client save (Client client);
 
-    boolean existsById (UUID id);
+    void deleteById(UUID id);
+
+    boolean existsById(UUID id);
 
     Optional<Client> findByName(String name);
 
