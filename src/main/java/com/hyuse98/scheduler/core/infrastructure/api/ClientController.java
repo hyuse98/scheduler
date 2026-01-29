@@ -29,7 +29,6 @@ public class ClientController {
 
     @PostMapping
     public void createClient(@Valid @RequestBody ClientDto clientDto) {
-        //Todo()
         saveClientUseCase.execute(clientDto);
     }
 
