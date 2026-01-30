@@ -38,11 +38,17 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public Optional<Client> findByName(String name) {
-        return Optional.empty();
+        return clientJpaRepository.findByName();
     }
 
     @Override
     public Optional<Client> findByEmail(String email) {
-        return Optional.empty();
+        return clientJpaRepository.findByEmail();
+    }
+
+    @Override
+    public Optional<Client> findById(UUID id) {
+        var entity = clientJpaRepository.findById(id);
+        return entity.map(clientEntityMapper::toDomain);
     }
 }

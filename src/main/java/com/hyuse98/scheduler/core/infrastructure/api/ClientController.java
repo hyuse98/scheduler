@@ -1,6 +1,7 @@
 package com.hyuse98.scheduler.core.infrastructure.api;
 
 import com.hyuse98.scheduler.core.application.dto.ClientDto;
+import com.hyuse98.scheduler.core.application.usecases.client.DeleteClientUseCase;
 import com.hyuse98.scheduler.core.application.usecases.client.SaveClientUseCase;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -14,18 +15,18 @@ public class ClientController {
     private final SaveClientUseCase saveClientUseCase;
     private final DeleteClientUseCase deleteClientUseCase;
 
-    public ClientController(SaveClientUseCase saveClientUseCase) {
+    public ClientController(SaveClientUseCase saveClientUseCase, DeleteClientUseCase deleteClientUseCase) {
         this.saveClientUseCase = saveClientUseCase;
         this.deleteClientUseCase = deleteClientUseCase;
     }
 
     @GetMapping
-    public void listClients(){
+    public void listClients() {
         //Todo()
     }
 
     @GetMapping("/{id}")
-    public void getClient(@PathVariable UUID id){
+    public void getClient(@PathVariable UUID id) {
         //Todo()
     }
 
@@ -35,7 +36,7 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public void updateClient(@PathVariable UUID id){
+    public void updateClient(@PathVariable UUID id) {
         //Todo()
     }
 

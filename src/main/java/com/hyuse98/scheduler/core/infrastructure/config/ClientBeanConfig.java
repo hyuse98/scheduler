@@ -1,7 +1,6 @@
 package com.hyuse98.scheduler.core.infrastructure.config;
 
-import com.hyuse98.scheduler.core.application.usecases.client.SaveClientUseCase;
-import com.hyuse98.scheduler.core.application.usecases.client.SaveClientUseCaseImpl;
+import com.hyuse98.scheduler.core.application.usecases.client.*;
 import com.hyuse98.scheduler.core.domain.repository.ClientRepository;
 import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ClientEntityMapper;
 import org.springframework.context.ApplicationEventPublisher;
@@ -21,10 +20,8 @@ public class ClientBeanConfig {
         return new DeleteClientUseCaseImpl(clientRepository);
     }
 
-        return new SaveClientUseCaseImpl(
-                clientRepository,
-                eventPublisher,
-                clientEntityMapper
-        );
+    @Bean
+    public GetClientUseCase getClientUseCase(ClientRepository clientRepository) {
+        return new GetClientUseCaseImpl(clientRepository);
     }
 }

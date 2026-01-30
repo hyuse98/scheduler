@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface ClientRepository {
 
-    Client save (Client client);
+    Client save(Client client);
 
     void deleteById(UUID id);
 
@@ -16,4 +16,6 @@ public interface ClientRepository {
     Optional<Client> findByName(String name);
 
     Optional<Client> findByEmail(String email);
+
+    Optional<Client> findById(UUID id);
 }
