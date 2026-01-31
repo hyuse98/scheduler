@@ -10,18 +10,20 @@ import java.util.UUID;
  */
 public class Schedule {
 
-    UUID id;
-    UUID clientId;
-    UUID serviceProviderId;
-    String serviceType;
-    String description;
-    Date scheduledAt;
-    String status;
+    private final UUID id;
+    private UUID clientId;
+    private UUID serviceProviderId;
+    private String serviceType;
+    private String description;
+    private final Date scheduledAt;
+    private String status;
 
-    public Schedule() {
+    private Schedule(UUID id, Date scheduledAt) {
+        this.id = id;
+        this.scheduledAt = scheduledAt;
     }
 
-    public Schedule(UUID id, UUID clientId, UUID serviceProviderId, String serviceType, String description, Date scheduledAt, String status) {
+    private Schedule(UUID id, UUID clientId, UUID serviceProviderId, String serviceType, String description, Date scheduledAt, String status) {
         this.id = id;
         this.clientId = clientId;
         this.serviceProviderId = serviceProviderId;
@@ -29,33 +31,5 @@ public class Schedule {
         this.description = description;
         this.scheduledAt = scheduledAt;
         this.status = status;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public UUID getClientId() {
-        return clientId;
-    }
-
-    public UUID getServiceProviderId() {
-        return serviceProviderId;
-    }
-
-    public String getServiceType() {
-        return serviceType;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Date getScheduledAt() {
-        return scheduledAt;
-    }
-
-    public String getStatus() {
-        return status;
     }
 }
