@@ -24,4 +24,9 @@ public class ClientBeanConfig {
     public GetClientUseCase getClientUseCase(ClientRepository clientRepository) {
         return new GetClientUseCaseImpl(clientRepository);
     }
+
+    @Bean
+    public ListClientUseCase listClientUseCase(ClientRepository clientRepository) {
+        return new ListClientUseCaseImpl(clientRepository);
+    }
 }

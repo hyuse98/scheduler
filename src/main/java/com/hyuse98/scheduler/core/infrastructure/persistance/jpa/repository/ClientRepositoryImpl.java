@@ -5,8 +5,10 @@ import com.hyuse98.scheduler.core.domain.repository.ClientRepository;
 import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ClientEntityMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Repository
 public class ClientRepositoryImpl implements ClientRepository {
@@ -50,5 +52,13 @@ public class ClientRepositoryImpl implements ClientRepository {
     public Optional<Client> findById(UUID id) {
         var entity = clientJpaRepository.findById(id);
         return entity.map(clientEntityMapper::toDomain);
+    }
+
+    @Override
+    public Collection<Client> findAll() {
+        return clientJpaRepository.findAll()
+                .stream()
+                .map(clientEntityMapper::toDomain)
+                .collect(Collectors.toList());
     }
 }
