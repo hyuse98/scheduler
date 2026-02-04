@@ -1,23 +1,25 @@
 package com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper;
 
-import com.hyuse98.scheduler.core.application.dto.ClientDto;
+import com.hyuse98.scheduler.core.application.dto.ClientResponse;
+import com.hyuse98.scheduler.core.application.dto.CreateClientRequest;
 import com.hyuse98.scheduler.core.domain.model.Client;
 import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.entities.ClientJpaEntity;
 import org.mapstruct.*;
+
+import java.util.Date;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ClientEntityMapper {
 
     ClientJpaEntity toEntity(Client client);
-
-    ClientDto toDto(Client client);
-
-    Client toDomain(ClientDto clientDto);
-
     Client toDomain(ClientJpaEntity clientJpaEntity);
 
+    ClientResponse toResponse(Client client);
+
+    Client toDomain(CreateClientRequest request);
+
     @ObjectFactory
-    default Client createClient(ClientJpaEntity entity) {
+    default Client reconstituteClient(ClientJpaEntity entity) {
         return Client.reconstitute(
                 entity.getId(),
                 entity.getEmail(),
@@ -32,17 +34,17 @@ public interface ClientEntityMapper {
     }
 
     @ObjectFactory
-    default Client createClient(ClientDto dto) {
+    default Client createNewClient(CreateClientRequest request) {
         return Client.create(
-                dto.id(),
-                dto.email(),
-                dto.name(),
-                dto.phoneNumber(),
-                dto.birthday(),
-                dto.address(),
-                dto.cns(),
-                dto.createdAt(),
-                dto.isActive()
+                request.id(),
+                request.name(),
+                request.email(),
+                request.phoneNumber(),
+                request.birthday(),
+                request.address(),
+                request.cns(),
+                new Date(),
+                true
         );
     }
 }

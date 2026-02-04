@@ -1,6 +1,6 @@
 package com.hyuse98.scheduler.core.infrastructure.api;
 
-import com.hyuse98.scheduler.core.application.dto.ClientDto;
+import com.hyuse98.scheduler.core.application.dto.CreateClientRequest;
 import com.hyuse98.scheduler.core.application.dto.UpdateClientRequest;
 import com.hyuse98.scheduler.core.application.usecases.client.*;
 import jakarta.validation.Valid;
@@ -27,8 +27,8 @@ public class ClientController {
     }
 
     @PostMapping
-    public void createClient(@Valid @RequestBody ClientDto clientDto) {
-        saveClientUseCase.execute(clientDto);
+    public void createClient(@Valid @RequestBody CreateClientRequest createClientRequest) {
+        saveClientUseCase.execute(createClientRequest);
     }
 
     @GetMapping
@@ -41,7 +41,7 @@ public class ClientController {
         getClientUseCase.execute(id);
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public void updateClient(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateClientRequest request

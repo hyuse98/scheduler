@@ -50,11 +50,11 @@ public class Client {
     }
 
     public void updateProfile(String name, String phoneNumber, Date birthday, String address, String cns) {
-        this.name = name;
-        this.phoneNumber = phoneNumber;
-        this.birthday = birthday;
-        this.address = address;
-        this.cns = cns;
+        if (name != null && !name.isBlank()) this.name = name;
+        if (phoneNumber != null && !phoneNumber.isBlank()) this.phoneNumber = phoneNumber;
+        if (birthday != null) this.birthday = birthday;
+        if (address != null && !address.isBlank()) this.address = address;
+        if (cns != null && !cns.isBlank()) this.cns = cns;
     }
 
     public Client disable() {

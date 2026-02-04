@@ -1,7 +1,7 @@
 package com.hyuse98.scheduler.core.application.usecases.client;
 
 import com.hyuse98.scheduler.core.ClientRegisteredEvent;
-import com.hyuse98.scheduler.core.application.dto.ClientDto;
+import com.hyuse98.scheduler.core.application.dto.CreateClientRequest;
 import com.hyuse98.scheduler.core.domain.model.Client;
 import com.hyuse98.scheduler.core.domain.repository.ClientRepository;
 import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ClientEntityMapper;
@@ -25,18 +25,18 @@ public class SaveClientUseCaseImpl implements SaveClientUseCase {
     }
 
     @Override
-    public void execute(ClientDto clientDto) {
+    public void execute(CreateClientRequest createClientRequest) {
 
-        if (clientRepository.existsById(clientDto.id())) {
-            LOG.warn("Client with id {} already exists", clientDto.id());
+        if (clientRepository.existsById(createClientRequest.id())) {
+            LOG.warn("Client with id {} already exists", createClientRequest.id());
             return;
         }
 
-        if (clientRepository.findByEmail(clientDto.email()).isPresent()) {
-            throw new EntityExistsException("Email already exists: " + clientDto.email());
+        if (clientRepository.findByEmail(createClientRequest.email()).isPresent()) {
+            throw new EntityExistsException("Email already exists: " + createClientRequest.email());
         }
 
-        Client newClient = clientEntityMapper.toDomain(clientDto);
+        Client newClient = clientEntityMapper.toDomain(createClientRequest);
 
         Client savedClient = clientRepository.save(newClient);
 

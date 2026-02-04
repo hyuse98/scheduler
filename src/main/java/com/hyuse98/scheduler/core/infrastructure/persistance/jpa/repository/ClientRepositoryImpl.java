@@ -40,12 +40,14 @@ public class ClientRepositoryImpl implements ClientRepository {
 
     @Override
     public Optional<Client> findByName(String name) {
-        return clientJpaRepository.findByName();
+        return clientJpaRepository.findByName(name)
+                .map(clientEntityMapper::toDomain);
     }
 
     @Override
     public Optional<Client> findByEmail(String email) {
-        return clientJpaRepository.findByEmail();
+        return clientJpaRepository.findByEmail(email)
+                .map(clientEntityMapper::toDomain);
     }
 
     @Override

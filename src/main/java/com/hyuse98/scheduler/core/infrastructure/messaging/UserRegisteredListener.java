@@ -1,10 +1,9 @@
 package com.hyuse98.scheduler.core.infrastructure.messaging;
 
-import com.hyuse98.scheduler.core.application.dto.ClientDto;
+import com.hyuse98.scheduler.core.application.dto.CreateClientRequest;
 import com.hyuse98.scheduler.core.application.usecases.client.SaveClientUseCase;
 import com.hyuse98.scheduler.iam.UserRegisteredEvent;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -23,7 +22,7 @@ public class UserRegisteredListener {
 
         //TODO(Need Better Handling)
 
-        ClientDto registrationDto = new ClientDto(
+        CreateClientRequest registrationDto = new CreateClientRequest(
                 event.userId(),
                 event.userEmail(),
                 "PENDENTE",
