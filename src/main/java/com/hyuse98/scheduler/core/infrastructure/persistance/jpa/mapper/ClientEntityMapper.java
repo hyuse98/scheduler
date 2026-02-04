@@ -45,7 +45,4 @@ public interface ClientEntityMapper {
                 dto.isActive()
         );
     }
-
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    ClientJpaEntity partialUpdate(ClientDto clientDto, @MappingTarget ClientJpaEntity clientJpaEntity);
 }

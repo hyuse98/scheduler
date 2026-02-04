@@ -37,8 +37,8 @@ public class Client {
         return new Client(id, email, name, phoneNumber, birthday, address, CNS, createdAt, isActive);
     }
 
-    public static Client reconstitute(UUID id, String name, String email, String phoneNumber, Date birthday, String address, String CNS, Date createdAt, Boolean isActive) {
-        return new Client(id, name, email, phoneNumber, birthday, address, CNS, createdAt, isActive);
+    public static Client reconstitute(UUID id, String email, String name, String phoneNumber, Date birthday, String address, String CNS, Date createdAt, Boolean isActive) {
+        return new Client(id, email, name, phoneNumber, birthday, address, CNS, createdAt, isActive);
     }
 
     public void validate() {
