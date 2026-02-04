@@ -29,4 +29,9 @@ public class ClientBeanConfig {
     public ListClientUseCase listClientUseCase(ClientRepository clientRepository) {
         return new ListClientUseCaseImpl(clientRepository);
     }
+
+    @Bean
+    public UpdateClientUseCase updateClientUseCase(ClientRepository clientRepository) {
+        return new UpdateClientUseCaseImpl(clientRepository);
+    }
 }
