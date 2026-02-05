@@ -1,9 +1,11 @@
-package com.hyuse98.scheduler.core.application.usecases.client;
+package com.hyuse98.scheduler.core.application.usecases.client.impl;
 
 import com.hyuse98.scheduler.core.application.dto.UpdateClientRequest;
+import com.hyuse98.scheduler.core.application.usecases.client.UpdateClientUseCase;
 import com.hyuse98.scheduler.core.domain.model.Client;
 import com.hyuse98.scheduler.core.domain.repository.ClientRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 import java.util.UUID;
 
@@ -16,10 +18,11 @@ public class UpdateClientUseCaseImpl implements UpdateClientUseCase {
     }
 
     @Override
-    public void execute(UUID id, UpdateClientRequest request) {
+    @Transactional
+    public Client execute(UUID id, UpdateClientRequest request) {
 
         Client client = clientRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("{}"));
+                .orElseThrow(() -> new EntityNotFoundException("Cliente com ID " + id + " não encontrado"));
 
         client.updateProfile(
                 request.name(),
@@ -29,6 +32,8 @@ public class UpdateClientUseCaseImpl implements UpdateClientUseCase {
                 request.cns()
         );
 
-        clientRepository.save(client);
+        client.validate();
+
+        return clientRepository.save(client);
     }
 }

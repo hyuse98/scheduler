@@ -1,6 +1,7 @@
 package com.hyuse98.scheduler.core.infrastructure.config;
 
 import com.hyuse98.scheduler.core.application.usecases.client.*;
+import com.hyuse98.scheduler.core.application.usecases.client.impl.*;
 import com.hyuse98.scheduler.core.domain.repository.ClientRepository;
 import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ClientEntityMapper;
 import org.springframework.context.ApplicationEventPublisher;

@@ -1,11 +1,13 @@
-package com.hyuse98.scheduler.core.application.usecases.client;
+package com.hyuse98.scheduler.core.application.usecases.client.impl;
 
 import com.hyuse98.scheduler.core.ClientRegisteredEvent;
 import com.hyuse98.scheduler.core.application.dto.CreateClientRequest;
+import com.hyuse98.scheduler.core.application.usecases.client.SaveClientUseCase;
 import com.hyuse98.scheduler.core.domain.model.Client;
 import com.hyuse98.scheduler.core.domain.repository.ClientRepository;
 import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ClientEntityMapper;
 import jakarta.persistence.EntityExistsException;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -25,6 +27,7 @@ public class SaveClientUseCaseImpl implements SaveClientUseCase {
     }
 
     @Override
+    @Transactional
     public void execute(CreateClientRequest createClientRequest) {
 
         if (clientRepository.existsById(createClientRequest.id())) {

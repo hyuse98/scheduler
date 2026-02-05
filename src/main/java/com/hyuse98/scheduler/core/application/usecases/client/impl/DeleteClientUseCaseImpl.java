@@ -1,6 +1,9 @@
-package com.hyuse98.scheduler.core.application.usecases.client;
+package com.hyuse98.scheduler.core.application.usecases.client.impl;
 
+import com.hyuse98.scheduler.core.application.usecases.client.DeleteClientUseCase;
 import com.hyuse98.scheduler.core.domain.repository.ClientRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,12 +19,13 @@ public class DeleteClientUseCaseImpl implements DeleteClientUseCase {
     }
 
     @Override
+    @Transactional
     public void execute(UUID id) {
 
         if (!clientRepository.existsById(id)) {
             LOG.warn("Client with id {} does not exist", id);
+            throw new EntityNotFoundException("Client with id " + id + " does not exist");
         }
-
         clientRepository.deleteById(id);
     }
 }

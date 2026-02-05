@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface GetClientUseCase {
 
-    Optional<Client> execute(UUID id);
+    Client execute(UUID id);
 
-    Optional<Client> execute(String email);
+    Client execute(String email);
 }
