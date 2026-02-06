@@ -11,6 +11,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "schedule", schema = "core")
 public class ScheduleJpaEntity {
+
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;
@@ -88,5 +89,4 @@ public class ScheduleJpaEntity {
     public void setStatus(String status) {
         this.status = status;
     }
-
 }

@@ -1,8 +1,9 @@
-package com.hyuse98.scheduler.core.infrastructure.persistance.jpa.repository;
+package com.hyuse98.scheduler.core.infrastructure.persistance.jpa.repository.impl;
 
 import com.hyuse98.scheduler.core.domain.model.Client;
 import com.hyuse98.scheduler.core.domain.repository.ClientRepository;
 import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ClientEntityMapper;
+import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.repository.ClientJpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;

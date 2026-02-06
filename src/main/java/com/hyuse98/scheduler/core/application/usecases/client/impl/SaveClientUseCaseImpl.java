@@ -2,14 +2,12 @@ package com.hyuse98.scheduler.core.application.usecases.client.impl;
 
 import com.hyuse98.scheduler.core.ClientRegisteredEvent;
 import com.hyuse98.scheduler.core.application.dto.CreateClientRequest;
+import com.hyuse98.scheduler.core.application.exceptions.ClientAlreadyExistException;
 import com.hyuse98.scheduler.core.application.usecases.client.SaveClientUseCase;
 import com.hyuse98.scheduler.core.domain.model.Client;
 import com.hyuse98.scheduler.core.domain.repository.ClientRepository;
 import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ClientEntityMapper;
-import jakarta.persistence.EntityExistsException;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 
 public class SaveClientUseCaseImpl implements SaveClientUseCase {
@@ -17,8 +15,6 @@ public class SaveClientUseCaseImpl implements SaveClientUseCase {
     private final ClientRepository clientRepository;
     private final ApplicationEventPublisher eventPublisher;
     private final ClientEntityMapper clientEntityMapper;
-    private static final Logger LOG = LoggerFactory.getLogger(SaveClientUseCaseImpl.class);
-
 
     public SaveClientUseCaseImpl(ClientRepository clientRepository, ApplicationEventPublisher eventPublisher, ClientEntityMapper clientEntityMapper) {
         this.clientRepository = clientRepository;
@@ -28,15 +24,10 @@ public class SaveClientUseCaseImpl implements SaveClientUseCase {
 
     @Override
     @Transactional
-    public void execute(CreateClientRequest createClientRequest) {
-
-        if (clientRepository.existsById(createClientRequest.id())) {
-            LOG.warn("Client with id {} already exists", createClientRequest.id());
-            return;
-        }
+    public void execute(CreateClientRequest createClientRequest){
 
         if (clientRepository.findByEmail(createClientRequest.email()).isPresent()) {
-            throw new EntityExistsException("Email already exists: " + createClientRequest.email());
+            throw new ClientAlreadyExistException("Client with Email "+ createClientRequest.email() +" Already Exists: ");
         }
 
         Client newClient = clientEntityMapper.toDomain(createClientRequest);

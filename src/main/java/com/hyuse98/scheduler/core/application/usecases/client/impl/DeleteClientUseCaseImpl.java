@@ -18,14 +18,17 @@ public class DeleteClientUseCaseImpl implements DeleteClientUseCase {
         this.clientRepository = clientRepository;
     }
 
+    @Deprecated
     @Override
     @Transactional
     public void execute(UUID id) {
 
+        //TODO(Refactor Later: Not Urgent)
         if (!clientRepository.existsById(id)) {
             LOG.warn("Client with id {} does not exist", id);
             throw new EntityNotFoundException("Client with id " + id + " does not exist");
         }
+
         clientRepository.deleteById(id);
     }
 }

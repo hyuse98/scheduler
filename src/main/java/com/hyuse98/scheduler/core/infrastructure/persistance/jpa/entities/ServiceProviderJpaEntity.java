@@ -11,6 +11,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "service_provider", schema = "core")
 public class ServiceProviderJpaEntity {
+
     @Id
     @Column(name = "id", nullable = false)
     private UUID id;
@@ -121,5 +122,4 @@ public class ServiceProviderJpaEntity {
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
-
 }
