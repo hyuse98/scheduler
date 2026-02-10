@@ -17,6 +17,8 @@ public class User implements UserDetails {
     private Password password;
     private Set<Role> roles;
     private boolean enabled;
+    //TODO created at
+    //TODO updated at
 
     private User() {
     }
