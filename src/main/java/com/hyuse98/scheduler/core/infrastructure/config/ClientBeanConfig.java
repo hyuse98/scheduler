@@ -17,11 +17,6 @@ public class ClientBeanConfig {
     }
 
     @Bean
-    public DeleteClientUseCase deleteClientUseCase(ClientRepository clientRepository) {
-        return new DeleteClientUseCaseImpl(clientRepository);
-    }
-
-    @Bean
     public GetClientUseCase getClientUseCase(ClientRepository clientRepository) {
         return new GetClientUseCaseImpl(clientRepository);
     }
@@ -34,5 +29,15 @@ public class ClientBeanConfig {
     @Bean
     public UpdateClientUseCase updateClientUseCase(ClientRepository clientRepository) {
         return new UpdateClientUseCaseImpl(clientRepository);
+    }
+
+    @Bean
+    public DisableClientUseCase deleteClientUseCase(ClientRepository clientRepository) {
+        return new DisableClientUseCaseImpl(clientRepository);
+    }
+
+    @Bean
+    public EnableClientUseCase enableClientUseCase(ClientRepository clientRepository) {
+        return new EnableClientUseCaseImpl(clientRepository);
     }
 }
