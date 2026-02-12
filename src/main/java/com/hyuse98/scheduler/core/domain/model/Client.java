@@ -14,7 +14,7 @@ public class Client {
     private String address;
     private String cns;
     private final Date createdAt;
-    private Boolean isActive;
+    private boolean isActive;
 
     private Client(UUID id, Date createdAt) {
         this.id = id;
@@ -66,6 +66,8 @@ public class Client {
         this.isActive = true;
         return this;
     }
+
+    //TODO(Update methods for each field)
 
     public UUID getId() {
         return id;
