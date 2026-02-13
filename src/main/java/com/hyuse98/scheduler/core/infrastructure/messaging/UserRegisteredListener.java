@@ -2,7 +2,7 @@ package com.hyuse98.scheduler.core.infrastructure.messaging;
 
 import com.hyuse98.scheduler.core.application.dto.CreateClientRequest;
 import com.hyuse98.scheduler.core.application.usecases.client.SaveClientUseCase;
-import com.hyuse98.scheduler.iam.UserRegisteredEvent;
+import com.hyuse98.scheduler.iam.UserRegisteredEvent;//TODO Violation
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
