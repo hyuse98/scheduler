@@ -3,9 +3,7 @@ package com.hyuse98.scheduler.iam.infrastructure.api;
 import com.hyuse98.scheduler.iam.application.dto.UserProfileResponse;
 import com.hyuse98.scheduler.iam.application.usecase.DisableUserUsecase;
 import com.hyuse98.scheduler.iam.application.usecase.EnableUserUsecase;
-import com.hyuse98.scheduler.iam.application.usecase.GetUserProfileUsecase;
 import com.hyuse98.scheduler.iam.application.usecase.GetUsersUsecase;
-import com.hyuse98.scheduler.iam.domain.model.aggregate.User;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @PreAuthorize("hasRole('ADMIN')")
 @SecurityRequirement(name = "bearerAuth")
@@ -22,42 +21,35 @@ import java.util.UUID;
 public class AdminUserController {
 
     private final GetUsersUsecase getUsersUsecase;
-    private final GetUserProfileUsecase getUserProfileUsecase;
-    private final DisableUserUsecase  disableUserUsecase;
+    private final DisableUserUsecase disableUserUsecase;
     private final EnableUserUsecase enableUserUsecase;
 
-    public AdminUserController(GetUsersUsecase getUsersUsecase, GetUserProfileUsecase getUserProfileUsecase, DisableUserUsecase disableUserUsecase, EnableUserUsecase enableUserUsecase) {
+    public AdminUserController(GetUsersUsecase getUsersUsecase, DisableUserUsecase disableUserUsecase, EnableUserUsecase enableUserUsecase) {
         this.getUsersUsecase = getUsersUsecase;
-        this.getUserProfileUsecase = getUserProfileUsecase;
         this.disableUserUsecase = disableUserUsecase;
         this.enableUserUsecase = enableUserUsecase;
     }
 
-    //TODO(List Users)
     @GetMapping
-    public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok().body(getUsersUsecase.execute());
+    public ResponseEntity<List<UserProfileResponse>> getUsers() {
+        List<UserProfileResponse> response = getUsersUsecase.execute().stream()
+                .map(user -> new UserProfileResponse(
+                        user.getId(),
+                        user.getEmail().getValue(),
+                        user.getRoles().iterator().next().name()
+                ))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(response);
     }
 
-    //TODO(Get User {Email})
-    @GetMapping
-    public ResponseEntity<UserProfileResponse> getUserProfile(@RequestParam String email) {
-        return ResponseEntity.ok().body(getUserProfileUsecase.execute());
-    }
-
-    //TODO(Get User {ID})
-    @GetMapping
-    public ResponseEntity<UserProfileResponse> getUserProfile(@RequestParam UUID id) {
-        return ResponseEntity.ok().body(getUserProfileUsecase.execute());
-    }
-
-    @PostMapping
+    @PostMapping("/disable")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void disableUser(@RequestParam UUID id) {
         disableUserUsecase.execute(id);
     }
 
-    @PostMapping
+    @PostMapping("/enable")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void enableUser(@RequestParam UUID id) {
         enableUserUsecase.execute(id);
