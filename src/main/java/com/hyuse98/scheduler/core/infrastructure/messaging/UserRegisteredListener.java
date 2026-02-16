@@ -2,7 +2,7 @@ package com.hyuse98.scheduler.core.infrastructure.messaging;
 
 import com.hyuse98.scheduler.core.application.dto.CreateClientRequest;
 import com.hyuse98.scheduler.core.application.usecases.client.SaveClientUseCase;
-import com.hyuse98.scheduler.iam.UserRegisteredEvent;//TODO Violation
+import com.hyuse98.scheduler.core.infrastructure.messaging.dto.UserRegisteredMessage;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +18,7 @@ public class UserRegisteredListener {
     }
 
     @RabbitListener(queues = "core.user.registered.queue")
-    public void onUserRegistered(UserRegisteredEvent event) {
-
-        //TODO(Need Better Handling)
+    public void onUserRegistered(UserRegisteredMessage event) {
 
         CreateClientRequest registrationDto = new CreateClientRequest(
                 event.userId(),
