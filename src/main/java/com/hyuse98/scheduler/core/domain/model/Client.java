@@ -67,8 +67,6 @@ public class Client {
         return this;
     }
 
-    //TODO(Update methods for each field)
-
     public UUID getId() {
         return id;
     }
