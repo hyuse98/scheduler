@@ -6,9 +6,11 @@ import com.hyuse98.scheduler.core.application.usecases.client.UpdateClientUseCas
 import com.hyuse98.scheduler.core.domain.model.Client;
 import com.hyuse98.scheduler.core.domain.repository.ClientRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Service
 public class UpdateClientUseCaseImpl implements UpdateClientUseCase {
 
     private final ClientRepository clientRepository;

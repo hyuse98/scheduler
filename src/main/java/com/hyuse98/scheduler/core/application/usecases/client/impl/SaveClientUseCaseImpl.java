@@ -9,7 +9,9 @@ import com.hyuse98.scheduler.core.domain.repository.ClientRepository;
 import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ClientEntityMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
 
+@Service
 public class SaveClientUseCaseImpl implements SaveClientUseCase {
 
     private final ClientRepository clientRepository;
