@@ -1,8 +1,6 @@
 package com.hyuse98.scheduler.core.infrastructure.api.advice;
 
-import com.hyuse98.scheduler.core.application.exceptions.ClientAlreadyExistException;
-import com.hyuse98.scheduler.core.application.exceptions.ClientCollectionEmpty;
-import com.hyuse98.scheduler.core.application.exceptions.ClientNotFoundException;
+import com.hyuse98.scheduler.core.application.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -21,10 +19,25 @@ public class GlobalExceptionHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-    @ExceptionHandler(ClientAlreadyExistException.class)
-    public ResponseEntity<Object> handleClientAlreadyExistException(ClientAlreadyExistException ex) {
-        LOG.warn(ex.getMessage());
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    // Agrupa todas as exceções de "Não Encontrado" (HTTP 404)
+    @ExceptionHandler({
+            ClientNotFoundException.class,
+            ServiceProviderNotFoundException.class,
+            ScheduleNotFoundException.class
+    })
+    public ResponseEntity<Object> handleNotFoundExceptions(RuntimeException ex) {
+        LOG.warn("Resource not found: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
+    }
+
+    // Agrupa todas as exceções de "Conflito / Já Existe" (HTTP 409 ou 400)
+    @ExceptionHandler({
+            ClientAlreadyExistException.class,
+            ServiceProviderAlreadyExistException.class
+    })
+    public ResponseEntity<Object> handleAlreadyExistExceptions(RuntimeException ex) {
+        LOG.warn("Resource already exists: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     @ExceptionHandler(ClientCollectionEmpty.class)
@@ -33,16 +46,11 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    @ExceptionHandler(ClientNotFoundException.class)
-    public ResponseEntity<Object> handleClientNotFoundException(ClientNotFoundException ex) {
-        LOG.warn(ex.getMessage());
-        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleGeneralException(Exception ex) {
-        LOG.error("Internal Server Error Occurred: {}", ex.getMessage(), ex);
-        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error Occurred");
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        // Captura as validações do domínio (ex: agendamento no passado)
+        LOG.warn("Domain validation error: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -52,8 +60,14 @@ public class GlobalExceptionHandler {
                 .stream()
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .collect(Collectors.joining("; "));
-        LOG.error(message);
+        LOG.error("Validation Error: {}", message);
         return buildErrorResponse(HttpStatus.BAD_REQUEST, "Validation Error: " + message);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleGeneralException(Exception ex) {
+        LOG.error("Internal Server Error Occurred: {}", ex.getMessage(), ex);
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error Occurred");
     }
 
     private ResponseEntity<Object> buildErrorResponse(HttpStatus status, String message) {
