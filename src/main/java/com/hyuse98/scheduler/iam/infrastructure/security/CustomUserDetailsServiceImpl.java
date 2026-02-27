@@ -22,15 +22,13 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
         return userRepository.findByEmail(username)
                 .map(user -> {
-                    String encodedPassword = user.getPassword();
-
                     return User
                             .withUsername(user.getUsername())
-                            .password(encodedPassword)
-                            .authorities("ROLE_USER")
+                            .password(user.getPassword())
+                            .authorities(user.getAuthorities())
+                            .disabled(!user.isEnabled())
                             .build();
                 })
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
     }
-
 }
