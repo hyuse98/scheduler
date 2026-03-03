@@ -30,7 +30,7 @@ public class Client {
         this.address = address;
         this.cns = cns;
         this.createdAt = createdAt;
-        this.isActive = isActive;
+        this.isActive = isActive == null || isActive;
     }
 
     public static Client create(UUID id, String email, String name, String phoneNumber, Date birthday, String address, String CNS, Date createdAt, Boolean isActive) {
