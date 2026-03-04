@@ -6,7 +6,8 @@ import com.hyuse98.scheduler.core.application.usecases.client.GetClientUseCase;
 import com.hyuse98.scheduler.core.application.usecases.schedule.CreateScheduleUseCase;
 import com.hyuse98.scheduler.core.application.usecases.schedule.ListSchedulesUseCase;
 import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ScheduleEntityMapper;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,8 @@ import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Tag(name = "Client Schedules", description = "Endpoints para agendamentos do cliente")
 @PreAuthorize("hasRole('USER')")
-@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/v1/client/me/schedules")
 public class ClientScheduleController {
@@ -39,6 +40,7 @@ public class ClientScheduleController {
         this.mapper = mapper;
     }
 
+    @Operation(summary = "Criar agendamento", description = "Permite que o cliente logado crie um novo agendamento com um prestador de serviços")
     @PostMapping
     public ResponseEntity<ScheduleResponse> createSchedule(Principal principal, @Valid @RequestBody CreateScheduleRequest request) {
         // Usa o email do token para identificar de forma segura quem está a agendar
@@ -48,6 +50,7 @@ public class ClientScheduleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(savedSchedule));
     }
 
+    @Operation(summary = "Listar agendamentos", description = "Lista todos os agendamentos realizados pelo cliente logado")
     @GetMapping
     public ResponseEntity<List<ScheduleResponse>> getMySchedules(Principal principal) {
         String loggedInEmail = principal.getName();
