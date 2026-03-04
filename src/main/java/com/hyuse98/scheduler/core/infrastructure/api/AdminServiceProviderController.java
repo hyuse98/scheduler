@@ -5,7 +5,8 @@ import com.hyuse98.scheduler.core.application.dto.ServiceProviderResponse;
 import com.hyuse98.scheduler.core.application.usecases.serviceprovider.CreateServiceProviderUseCase;
 import com.hyuse98.scheduler.core.application.usecases.serviceprovider.GetServiceProviderUseCase;
 import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ServiceProviderEntityMapper;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Tag(name = "Admin - Service Provider", description = "Endpoints administrativos para prestadores de serviços")
 @PreAuthorize("hasRole('ADMIN')")
-@SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/v1/admin/service-provider")
 public class AdminServiceProviderController {
@@ -33,6 +34,7 @@ public class AdminServiceProviderController {
         this.mapper = mapper;
     }
 
+    @Operation(summary = "Criar Prestador de Serviço", description = "Cria um novo perfil de prestador de serviços")
     @PostMapping
     public ResponseEntity<ServiceProviderResponse> create(@RequestBody @Valid CreateServiceProviderRequest request) {
         // Apenas ADMINS acessam este endpoint para criar novos prestadores
@@ -40,6 +42,7 @@ public class AdminServiceProviderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(savedProvider));
     }
 
+    @Operation(summary = "Obter prestador por ID", description = "Busca os detalhes de um prestador específico")
     @GetMapping("/{id}")
     public ResponseEntity<ServiceProviderResponse> getById(@PathVariable UUID id) {
         var provider = getServiceProviderUseCase.execute(id);
