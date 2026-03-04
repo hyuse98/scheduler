@@ -5,7 +5,8 @@ import com.hyuse98.scheduler.core.application.dto.UpdateServiceProviderRequest;
 import com.hyuse98.scheduler.core.application.usecases.serviceprovider.GetServiceProviderUseCase;
 import com.hyuse98.scheduler.core.application.usecases.serviceprovider.UpdateServiceProviderUseCase;
 import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ServiceProviderEntityMapper;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
-@PreAuthorize("hasRole('USER')")
-@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Service Provider Profile", description = "Endpoints para gerenciamento do perfil do prestador de serviços")
+@PreAuthorize("hasRole('SERVICE_PROVIDER')")
 @RestController
 @RequestMapping("/api/v1/provider/me")
 public class ServiceProviderProfileController {
@@ -32,6 +33,7 @@ public class ServiceProviderProfileController {
         this.mapper = mapper;
     }
 
+    @Operation(summary = "Obter Perfil do Prestador", description = "Retorna os detalhes completos do perfil do prestador de serviços logado")
     @GetMapping
     public ResponseEntity<ServiceProviderResponse> getMyProfile(Principal principal) {
         String loggedInEmail = principal.getName();
@@ -39,6 +41,7 @@ public class ServiceProviderProfileController {
         return ResponseEntity.ok(mapper.toResponse(provider));
     }
 
+    @Operation(summary = "Atualizar Perfil do Prestador", description = "Atualiza os dados do perfil do prestador de serviços logado")
     @PatchMapping
     public ResponseEntity<ServiceProviderResponse> updateMyProfile(Principal principal, @Valid @RequestBody UpdateServiceProviderRequest request) {
         String loggedInEmail = principal.getName();
