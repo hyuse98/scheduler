@@ -25,7 +25,8 @@ public class RoleJpaEntity {
 
     public enum RoleName {
         ROLE_USER,
-        ROLE_ADMIN
+        ROLE_ADMIN,
+        ROLE_SERVICE_PROVIDER
     }
 
     public UUID getId() {
