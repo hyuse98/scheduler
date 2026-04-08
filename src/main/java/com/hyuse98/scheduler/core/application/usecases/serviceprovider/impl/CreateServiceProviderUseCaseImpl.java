@@ -1,35 +1,44 @@
 package com.hyuse98.scheduler.core.application.usecases.serviceprovider.impl;
 
-import com.hyuse98.scheduler.core.application.dto.CreateServiceProviderRequest;
 import com.hyuse98.scheduler.core.application.exceptions.ServiceProviderAlreadyExistException;
 import com.hyuse98.scheduler.core.application.usecases.serviceprovider.CreateServiceProviderUseCase;
 import com.hyuse98.scheduler.core.domain.model.ServiceProvider;
 import com.hyuse98.scheduler.core.domain.repository.ServiceProviderRepository;
-import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ServiceProviderEntityMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class CreateServiceProviderUseCaseImpl implements CreateServiceProviderUseCase {
 
     private final ServiceProviderRepository repository;
-    private final ServiceProviderEntityMapper mapper;
 
-    public CreateServiceProviderUseCaseImpl(ServiceProviderRepository repository, ServiceProviderEntityMapper mapper) {
+    public CreateServiceProviderUseCaseImpl(ServiceProviderRepository repository) {
         this.repository = repository;
-        this.mapper = mapper;
     }
 
     @Transactional
     @Override
-    public ServiceProvider execute(CreateServiceProviderRequest request) {
-        if (repository.findByEmail(request.email()).isPresent()) {
-            throw new ServiceProviderAlreadyExistException("Service Provider with Email " + request.email() + " Already Exists.");
+    public ServiceProvider execute(UUID id, String email) {
+        if (repository.findByEmail(email).isPresent()) {
+            throw new ServiceProviderAlreadyExistException("Service Provider with email " + email + " already exists.");
         }
 
-        ServiceProvider newProvider = mapper.toDomain(request);
-        newProvider.validate();
+        ServiceProvider newProvider = ServiceProvider.create(
+                id,
+                "PENDENTE",
+                email,
+                "PENDENTE",
+                null,
+                "PENDENTE",
+                "PENDENTE",
+                "PENDENTE",
+                new Date(),
+                true
+        );
 
         return repository.save(newProvider);
     }
-}
+}
