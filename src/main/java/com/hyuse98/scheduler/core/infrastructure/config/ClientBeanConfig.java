@@ -32,11 +32,6 @@ public class ClientBeanConfig {
     }
 
     @Bean
-    public DisableClientUseCase deleteClientUseCase(ClientRepository clientRepository) {
-        return new DisableClientUseCaseImpl(clientRepository);
-    }
-
-    @Bean
     public EnableClientUseCase enableClientUseCase(ClientRepository clientRepository) {
         return new EnableClientUseCaseImpl(clientRepository);
     }
