@@ -53,7 +53,13 @@ public class IamExceptionHandler {
                 .collect(Collectors.joining("; "));
 
         LOG.error("Validation Error: {}", message);
-        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Erro de validação: " + message);
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Validation error in the submitted payload: " + message);
+    }
+
+    @ExceptionHandler(IllegalUserStateTransitionException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalUserStateTransitionException(IllegalUserStateTransitionException ex){
+        LOG.warn("Change Status Exception: {}", ex.getMessage());
+        return buildErrorResponse(HttpStatus.OK, "Error occurred: " + ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
