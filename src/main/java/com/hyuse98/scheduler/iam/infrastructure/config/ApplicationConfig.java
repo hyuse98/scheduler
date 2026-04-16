@@ -2,8 +2,8 @@ package com.hyuse98.scheduler.iam.infrastructure.config;
 
 import com.hyuse98.scheduler.iam.application.usecase.GetUserProfileUsecase;
 import com.hyuse98.scheduler.iam.application.usecase.GetUsersUsecase;
-import com.hyuse98.scheduler.iam.application.usecase.impl.GetUserProfileUsecaseImpl;
-import com.hyuse98.scheduler.iam.application.usecase.impl.GetUsersUsecaseImpl;
+import com.hyuse98.scheduler.iam.application.usecase.impl.GetUserProfileUseCaseImpl;
+import com.hyuse98.scheduler.iam.application.usecase.impl.GetUsersUseCaseImpl;
 import com.hyuse98.scheduler.iam.domain.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,11 +47,11 @@ public class ApplicationConfig {
 
     @Bean
     public GetUsersUsecase getUsersUsecase(UserRepository userRepository) {
-        return new GetUsersUsecaseImpl(userRepository);
+        return new GetUsersUseCaseImpl(userRepository);
     }
 
     @Bean
     public GetUserProfileUsecase getUserProfileUsecase(UserRepository userRepository) {
-        return new GetUserProfileUsecaseImpl(userRepository);
+        return new GetUserProfileUseCaseImpl(userRepository);
     }
 }
