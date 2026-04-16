@@ -6,11 +6,11 @@ import com.hyuse98.scheduler.iam.domain.repository.UserRepository;
 
 import java.util.List;
 
-public class GetUsersUsecaseImpl implements GetUsersUsecase {
+public class GetUsersUseCaseImpl implements GetUsersUsecase {
 
     private final UserRepository userRepository;
 
-    public GetUsersUsecaseImpl(UserRepository userRepository) {
+    public GetUsersUseCaseImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 

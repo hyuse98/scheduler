@@ -1,6 +1,6 @@
 package com.hyuse98.scheduler.iam.application.usecase.impl;
 
-import com.hyuse98.scheduler.iam.UserRegisteredEvent;
+import com.hyuse98.scheduler.iam.application.events.UserRegisteredEvent;
 import com.hyuse98.scheduler.iam.application.dto.RegistrationRequest;
 import com.hyuse98.scheduler.iam.application.usecase.RegisterUseCase;
 import com.hyuse98.scheduler.iam.domain.model.aggregate.User;
@@ -17,13 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Set;
 
 @Service
-public class RegisterUsecaseImpl implements RegisterUseCase {
+public class RegisterUserUseCaseImpl implements RegisterUseCase {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final ApplicationEventPublisher eventPublisher;
 
-    public RegisterUsecaseImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, ApplicationEventPublisher eventPublisher) {
+    public RegisterUserUseCaseImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, ApplicationEventPublisher eventPublisher) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.eventPublisher = eventPublisher;

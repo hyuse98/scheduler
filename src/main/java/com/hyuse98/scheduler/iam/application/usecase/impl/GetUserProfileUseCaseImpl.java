@@ -8,11 +8,11 @@ import com.hyuse98.scheduler.iam.domain.repository.UserRepository;
 
 import java.util.UUID;
 
-public class GetUserProfileUsecaseImpl implements GetUserProfileUsecase {
+public class GetUserProfileUseCaseImpl implements GetUserProfileUsecase {
 
     private final UserRepository userRepository;
 
-    public GetUserProfileUsecaseImpl(UserRepository userRepository) {
+    public GetUserProfileUseCaseImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
