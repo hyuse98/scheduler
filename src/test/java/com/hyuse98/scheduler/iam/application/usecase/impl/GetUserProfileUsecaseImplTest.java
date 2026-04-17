@@ -27,7 +27,7 @@ class GetUserProfileUsecaseImplTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private GetUserProfileUsecaseImpl getUserProfileUsecase;
+    private GetUserProfileUseCaseImpl getUserProfileUsecase;
 
     @Test
     void shouldGetUserProfileSuccessfully() {
