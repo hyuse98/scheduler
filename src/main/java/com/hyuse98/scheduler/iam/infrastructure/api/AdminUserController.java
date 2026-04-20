@@ -14,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import com.hyuse98.scheduler.iam.infrastructure.api.advice.ErrorResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +40,9 @@ public class AdminUserController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Users Listed",
-                    content = @Content
+                    content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = UserProfileResponse.class)))
             ),
             @ApiResponse(
                     responseCode = "204",
@@ -47,7 +52,7 @@ public class AdminUserController {
             @ApiResponse(
                     responseCode = "500",
                     description = "Internal server error",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             )
     })
     @GetMapping
@@ -70,9 +75,9 @@ public class AdminUserController {
     @Operation(summary = "Update user status", description = "Activates or deactivates a user's access by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "User status updated successfully", content = @Content),
-            @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
-            @ApiResponse(responseCode = "409", description = "State conflict (if using strict state validation)", content = @Content),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "409", description = "State conflict (if using strict state validation)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PatchMapping("/{id}/status")
     @ResponseStatus(HttpStatus.NO_CONTENT)
