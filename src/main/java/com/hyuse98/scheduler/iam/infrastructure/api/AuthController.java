@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.hyuse98.scheduler.iam.infrastructure.api.advice.ErrorResponse;
 
 @Tag(name = "Authentication", description = "Endpoints for Login and Registration")
 @SecurityRequirements()
@@ -48,17 +49,17 @@ public class AuthController {
             @ApiResponse(
                     responseCode = "401",
                     description = "Invalid credentials - incorrect email or password",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             ),
             @ApiResponse(
                     responseCode = "400",
                     description = "Validation error in the submitted payload",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "Internal server error",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             )
     })
     @PostMapping("/login")
@@ -77,17 +78,17 @@ public class AuthController {
             @ApiResponse(
                     responseCode = "409",
                     description = "Email already in use",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             ),
             @ApiResponse(
                     responseCode = "400",
                     description = "Validation error in the submitted payload",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "Internal server error",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             )
     })
     @PostMapping("/register/user")
@@ -106,17 +107,17 @@ public class AuthController {
             @ApiResponse(
                     responseCode = "409",
                     description = "Email already in use",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             ),
             @ApiResponse(
                     responseCode = "400",
                     description = "Validation error in the submitted payload",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "Internal server error",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             )
     })
     @PostMapping("/register/provider")
