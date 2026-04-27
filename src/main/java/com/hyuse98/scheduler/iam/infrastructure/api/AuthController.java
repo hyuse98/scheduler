@@ -3,6 +3,7 @@ package com.hyuse98.scheduler.iam.infrastructure.api;
 import com.hyuse98.scheduler.iam.application.dto.JwtResponse;
 import com.hyuse98.scheduler.iam.application.dto.LoginRequest;
 import com.hyuse98.scheduler.iam.application.dto.RegistrationRequest;
+import com.hyuse98.scheduler.iam.application.dto.UserProfileResponse;
 import com.hyuse98.scheduler.iam.application.usecase.LoginUseCase;
 import com.hyuse98.scheduler.iam.application.usecase.RegisterServiceProviderUseCase;
 import com.hyuse98.scheduler.iam.application.usecase.RegisterUseCase;
@@ -16,7 +17,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import jakarta.validation.Valid;
 import com.hyuse98.scheduler.iam.infrastructure.api.advice.ErrorResponse;
+import java.net.URI;
 
 @Tag(name = "Authentication", description = "Endpoints for Login and Registration")
 @SecurityRequirements()
@@ -63,7 +67,7 @@ public class AuthController {
             )
     })
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest request) {
         JwtResponse response = loginUseCase.execute(request);
         return ResponseEntity.ok(response);
     }
@@ -92,9 +96,13 @@ public class AuthController {
             )
     })
     @PostMapping("/register/user")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void register(@RequestBody RegistrationRequest request) {
-        registerUseCase.execute(request);
+    public ResponseEntity<UserProfileResponse> register(@Valid @RequestBody RegistrationRequest request) {
+        UserProfileResponse response = registerUseCase.execute(request);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(response.id())
+                .toUri();
+        return ResponseEntity.created(location).body(response);
     }
 
     @Operation(summary = "Register new service provider", description = "Creates a new provider record on the platform and dispatches the registration event")
@@ -121,8 +129,12 @@ public class AuthController {
             )
     })
     @PostMapping("/register/provider")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void registerProvider(@RequestBody RegistrationRequest request) {
-        registerServiceProviderUseCase.execute(request);
+    public ResponseEntity<UserProfileResponse> registerProvider(@Valid @RequestBody RegistrationRequest request) {
+        UserProfileResponse response = registerServiceProviderUseCase.execute(request);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(response.id())
+                .toUri();
+        return ResponseEntity.created(location).body(response);
     }
 }
