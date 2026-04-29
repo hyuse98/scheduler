@@ -2,6 +2,7 @@ package com.hyuse98.scheduler.iam.application.usecase.impl;
 
 import com.hyuse98.scheduler.iam.application.events.UserRegisteredEvent;
 import com.hyuse98.scheduler.iam.application.dto.RegistrationRequest;
+import com.hyuse98.scheduler.iam.application.dto.UserProfileResponse;
 import com.hyuse98.scheduler.iam.domain.model.aggregate.User;
 import com.hyuse98.scheduler.iam.domain.model.vo.Email;
 import com.hyuse98.scheduler.iam.domain.model.vo.Password;
@@ -57,7 +58,7 @@ class RegisterUserUseCaseImplTest {
         User savedUser = User.reconstitute(generatedId, Email.of(validRequest.email()), Password.fromHashed("encoded_password"), Set.of(Role.ROLE_USER), true);
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
-        registerUsecase.execute(validRequest);
+        UserProfileResponse response = registerUsecase.execute(validRequest);
 
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).save(userCaptor.capture());
@@ -73,6 +74,11 @@ class RegisterUserUseCaseImplTest {
         
         assertEquals(generatedId, capturedEvent.userId());
         assertEquals(validRequest.email(), capturedEvent.userEmail());
+        
+        assertNotNull(response);
+        assertEquals(generatedId, response.id());
+        assertEquals(validRequest.email(), response.email());
+        assertEquals("ROLE_USER", response.role());
     }
 
     @Test
