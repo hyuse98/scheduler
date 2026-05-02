@@ -26,8 +26,7 @@ class JwtAuthFilterTest {
     @Mock
     private TokenService tokenService;
 
-    @Mock
-    private UserDetailsService userDetailsService;
+
 
     @InjectMocks
     private JwtAuthFilter jwtAuthFilter;
@@ -59,12 +58,10 @@ class JwtAuthFilterTest {
 
         String token = "valid_token";
         String email = "test@example.com";
-        UserDetails userDetails = mock(UserDetails.class);
-
         when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
         when(tokenService.extractUsername(token)).thenReturn(email);
-        when(userDetailsService.loadUserByUsername(email)).thenReturn(userDetails);
-        when(tokenService.isTokenValid(token, userDetails)).thenReturn(true);
+        when(tokenService.isTokenValid(token)).thenReturn(true);
+        when(tokenService.extractRoles(token)).thenReturn(java.util.Collections.singletonList("ROLE_USER"));
 
         jwtAuthFilter.doFilterInternal(request, response, filterChain);
 
