@@ -35,6 +35,7 @@ public class LoginUseCaseImpl implements LoginUseCase {
         );
 
         User user = (User) authentication.getPrincipal();
+        assert user != null;
         String token = tokenService.generateToken(user);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
 

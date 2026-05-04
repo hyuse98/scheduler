@@ -4,11 +4,8 @@ import com.hyuse98.scheduler.iam.application.dto.*;
 import com.hyuse98.scheduler.iam.application.usecase.LoginUseCase;
 import com.hyuse98.scheduler.iam.application.usecase.RegisterServiceProviderUseCase;
 import com.hyuse98.scheduler.iam.application.usecase.RegisterUseCase;
-import com.hyuse98.scheduler.iam.domain.model.aggregate.User;
 import com.hyuse98.scheduler.iam.infrastructure.api.advice.ErrorResponse;
 import com.hyuse98.scheduler.iam.infrastructure.config.RefreshTokenService;
-import com.hyuse98.scheduler.iam.infrastructure.persistence.jpa.entity.RefreshToken;
-import com.hyuse98.scheduler.iam.infrastructure.persistence.jpa.mapper.UserMapper;
 import com.hyuse98.scheduler.iam.infrastructure.security.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,18 +35,16 @@ public class AuthController {
     private final LoginUseCase loginUseCase;
     private final RefreshTokenService refreshTokenService;
     private final TokenService tokenService;
-    private final UserMapper userMapper;
 
     public AuthController(
             RegisterUseCase registerUseCase,
             RegisterServiceProviderUseCase registerServiceProviderUseCase,
-            LoginUseCase loginUseCase, RefreshTokenService refreshTokenService, TokenService tokenService, UserMapper userMapper) {
+            LoginUseCase loginUseCase, RefreshTokenService refreshTokenService, TokenService tokenService) {
         this.registerUseCase = registerUseCase;
         this.registerServiceProviderUseCase = registerServiceProviderUseCase;
         this.loginUseCase = loginUseCase;
         this.refreshTokenService = refreshTokenService;
         this.tokenService = tokenService;
-        this.userMapper = userMapper;
     }
 
     @PostMapping("/refresh")
@@ -58,14 +53,12 @@ public class AuthController {
 
         return refreshTokenService.findByToken(requestRefreshToken)
                 .map(refreshTokenService::verifyExpiration)
-                .map(RefreshToken::getUser)
-                .map(user -> {
+                .map(refreshTokenService::getUserFromToken)
+                .map(domainUser -> {
 
-                    if (!user.isEnabled()) {
+                    if (!domainUser.isEnabled()) {
                         throw new RuntimeException("Usuário desativado!");
                     }
-
-                    User domainUser = userMapper.toDomain(user);
 
                     String token = tokenService.generateToken(domainUser);
                     return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));

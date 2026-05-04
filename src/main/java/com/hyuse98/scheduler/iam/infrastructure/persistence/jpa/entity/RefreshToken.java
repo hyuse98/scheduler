@@ -1,34 +1,20 @@
 package com.hyuse98.scheduler.iam.infrastructure.persistence.jpa.entity;
 
-import jakarta.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.TimeToLive;
 
-import java.time.Instant;
+import java.util.UUID;
 
-@Entity
+@RedisHash("refresh_token")
 public class RefreshToken {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true)
     private String token;
 
-    @Column(nullable = false)
-    private Instant expiryDate;
+    private UUID userId;
 
-    @OneToOne
-    @JoinColumn(
-            name = "user_id",
-            referencedColumnName = "id")
-    private UserJpaEntity user;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @TimeToLive
+    private Long expirationTime; // TTL in seconds
 
     public String getToken() {
         return token;
@@ -38,19 +24,19 @@ public class RefreshToken {
         this.token = token;
     }
 
-    public Instant getExpiryDate() {
-        return expiryDate;
+    public UUID getUserId() {
+        return userId;
     }
 
-    public void setExpiryDate(Instant expiryDate) {
-        this.expiryDate = expiryDate;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
-    public UserJpaEntity getUser() {
-        return user;
+    public Long getExpirationTime() {
+        return expirationTime;
     }
 
-    public void setUser(UserJpaEntity user) {
-        this.user = user;
+    public void setExpirationTime(Long expirationTime) {
+        this.expirationTime = expirationTime;
     }
 }

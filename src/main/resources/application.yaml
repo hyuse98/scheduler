@@ -16,16 +16,21 @@ spring:
         default_schema: public
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/scheduler
-    username: admin
-    password: admin
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: admin
-    password: admin
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
 
 springdoc:
   swagger-ui:
@@ -43,12 +48,13 @@ application:
   security:
     jwt:
       # Generate a key HMCA SHA-256 https://www.freeformatter.com/hmac-generator.html
-      secret-key: d9293a62a650ed12c520a614587b831431aaa0e89b23280787331168d7725b65
-      # Expiration time in  milliseconds (ex: 24 hours)
-      expiration: 86400000
+      secret-key: ${JWT_SECRET_KEY}
+      # Expiration time in  milliseconds
+      expiration: ${JWT_EXPIRATION}
 
       refresh-token:
-        expiration: 604800000
+        # Expiration time in  milliseconds
+        expiration: ${JWT_REFRESH_TOKEN_EXPIRATION}
 
 resilience4j:
   retry:
