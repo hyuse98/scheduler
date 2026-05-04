@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: scheduler
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: public
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/scheduler
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+
+application:
+  security:
+    jwt:
+      # Generate a key https://www.allkeysgenerator.com/ (256-bit, Base64)
+      secret-key: a2VxaW5nbWV1YW1vcg==
+      # Expiration time in  milliseconds (ex: 24 hours)
+      expiration: 86400000
+
+resilience4j:
+  retry:
+    instances:
+      rabbitmq-retry:
+        max-attempts: 3
+        wait-duration: 2s
+        retry-exceptions:
+          - org.springframework.amqp.AmqpException
+          - java.net.ConnectException
