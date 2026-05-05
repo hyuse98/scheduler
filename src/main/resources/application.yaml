@@ -65,3 +65,14 @@ resilience4j:
         retry-exceptions:
           - org.springframework.amqp.AmqpException
           - java.net.ConnectException
+
+#Bucket4j
+rate-limit:
+  authenticated:
+    capacity: 5
+    refill-tokens: 5
+    refill-duration-minutes: 1
+  pub:
+    capacity: 5
+    refill-tokens: 5
+    refill-duration-minutes: 1
