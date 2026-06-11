@@ -37,8 +37,11 @@ public class RegisterUsecaseImpl implements RegisterUseCase {
             throw new EntityExistsException("Email already exists: " + request.email());
         }
 
+        Password.validateRaw(request.password());
+        String hashedPassword = passwordEncoder.encode(request.password());
+
         Email email = Email.of(request.email());
-        Password password = Password.of(request.password(), passwordEncoder);
+        Password password = Password.fromHashed(hashedPassword);
         Set<Role> initialRoles = Set.of(Role.ROLE_USER);
 
         User newUser = User.create(email, password, initialRoles);

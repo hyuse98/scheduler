@@ -3,6 +3,7 @@ package com.hyuse98.scheduler.iam.domain.model.aggregate;
 import com.hyuse98.scheduler.iam.domain.model.vo.Email;
 import com.hyuse98.scheduler.iam.domain.model.vo.Password;
 import com.hyuse98.scheduler.iam.domain.model.vo.Role;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,8 @@ public class User implements UserDetails {
     private Password password;
     private Set<Role> roles;
     private boolean enabled;
+    //TODO created at
+    //TODO updated at
 
     private User() {
     }
@@ -81,9 +84,8 @@ public class User implements UserDetails {
         return Collections.unmodifiableSet(roles);
     }
 
-    //TODO(Check getAuthorities IDE warning later)
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
                 .map(role -> new SimpleGrantedAuthority(role.name()))
                 .collect(Collectors.toList());
@@ -94,9 +96,8 @@ public class User implements UserDetails {
         return this.password.getHashedPassword();
     }
 
-    //TODO(Check getUsername IDE warning later)
     @Override
-    public String getUsername() {
+    public @NonNull String getUsername() {
         return this.email.getValue();
     }
 

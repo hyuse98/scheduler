@@ -27,6 +27,12 @@ spring:
     username: admin
     password: admin
 
+logging:
+  level:
+    root=WARN:
+  file:
+    name: scheduler_log.log
+
 application:
   security:
     jwt:

@@ -22,7 +22,6 @@ public class SecurityConfig {
         this.authenticationProvider = authenticationProvider;
     }
 
-    //TODO(Exception Warn)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -34,7 +33,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/h2-console/**",
                                 "/swagger-ui/**",
-                                "/swagger-ui.html/**",
+                                "/swagger-ui.html",
                                 "/v3/api-docs/**",
                                 "/api/auth/**"
                         ).permitAll()
