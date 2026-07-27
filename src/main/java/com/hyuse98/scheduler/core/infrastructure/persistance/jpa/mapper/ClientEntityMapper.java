@@ -11,9 +11,11 @@ import java.util.Date;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ClientEntityMapper {
 
+    @Mapping(target = "isActive", source = "active")
     ClientJpaEntity toEntity(Client client);
     Client toDomain(ClientJpaEntity clientJpaEntity);
 
+    @Mapping(target = "isActive", source = "active")
     ClientResponse toResponse(Client client);
 
     Client toDomain(CreateClientRequest request);
@@ -44,7 +46,7 @@ public interface ClientEntityMapper {
                 request.address(),
                 request.cns(),
                 new Date(),
-                true
+                request.isActive()
         );
     }
 }

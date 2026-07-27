@@ -9,7 +9,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -30,14 +30,14 @@ spring:
 logging:
   level:
     root=WARN:
-  file:
-    name: scheduler_log.log
+#  file:
+#    name: scheduler_log.log
 
 application:
   security:
     jwt:
-      # Generate a key https://www.allkeysgenerator.com/ (256-bit, Base64)
-      secret-key: a2VxaW5nbWV1YW1vcg==
+      # Generate a key HMCA SHA-256 https://www.freeformatter.com/hmac-generator.html
+      secret-key: d9293a62a650ed12c520a614587b831431aaa0e89b23280787331168d7725b65
       # Expiration time in  milliseconds (ex: 24 hours)
       expiration: 86400000
 

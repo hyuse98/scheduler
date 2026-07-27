@@ -40,4 +40,9 @@ public class ClientBeanConfig {
     public EnableClientUseCase enableClientUseCase(ClientRepository clientRepository) {
         return new EnableClientUseCaseImpl(clientRepository);
     }
+
+    @Bean
+    public DisableClientUseCase disableClientUseCase(ClientRepository clientRepository) {
+        return new DisableClientUseCaseImpl(clientRepository);
+    }
 }

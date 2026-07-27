@@ -7,6 +7,7 @@ import com.hyuse98.scheduler.iam.infrastructure.persistence.jpa.entity.UserJpaEn
 import com.hyuse98.scheduler.iam.infrastructure.persistence.jpa.mapper.UserMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -52,5 +53,12 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<User> findById(UUID id) {
         return userJpaRepository.findById(id)
                 .map(userMapper::toDomain);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userJpaRepository.findAll().stream()
+                .map(userMapper::toDomain)
+                .collect(Collectors.toList());
     }
 }
