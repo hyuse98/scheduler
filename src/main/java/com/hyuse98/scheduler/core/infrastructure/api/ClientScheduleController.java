@@ -41,6 +41,7 @@ public class ClientScheduleController {
     }
 
     @Operation(summary = "Criar agendamento", description = "Permite que o cliente logado crie um novo agendamento com um prestador de serviços")
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ResponseEntity<ScheduleResponse> createSchedule(Principal principal, @Valid @RequestBody CreateScheduleRequest request) {
         // Usa o email do token para identificar de forma segura quem está a agendar

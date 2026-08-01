@@ -30,7 +30,7 @@ public class LoginUsecaseImpl implements LoginUseCase {
                 )
         );
 
-//TODO(Check userDetails IDE warning later)
+        //TODO(Check userDetails IDE warning later)
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String token = tokenService.generateToken(userDetails);
 

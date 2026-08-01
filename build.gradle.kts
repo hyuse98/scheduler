@@ -3,6 +3,7 @@ plugins {
 	jacoco
 	id("org.springframework.boot") version "4.0.5"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
 }
 
 group = "com.hyuse98"
@@ -97,6 +98,14 @@ dependencyManagement {
 //		mavenBom("net.ttddyy.observation:datasource-micrometer-bom:$datasourceMicrometerVersion")
 	}
 }
+
+openApi {
+	apiDocsUrl.set("http://localhost:8080/v3/api-docs")
+	outputDir.set(layout.buildDirectory.dir("docs"))
+	outputFileName.set("openapi.json")
+	waitTimeInSeconds.set(30)
+}
+
 
 tasks.withType<Test> {
 	useJUnitPlatform()
