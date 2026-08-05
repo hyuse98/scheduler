@@ -26,7 +26,7 @@ class GetUsersUsecaseImplTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private GetUsersUsecaseImpl getUsersUsecase;
+    private GetUsersUseCaseImpl getUsersUsecase;
 
     @Test
     void shouldGetAllUsers() {

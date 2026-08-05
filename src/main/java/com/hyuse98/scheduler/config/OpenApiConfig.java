@@ -25,9 +25,9 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Scheduler API")
                         .version("1.0.0")
-                        .description("API para gerenciamento de agendamentos e usuários")
+                        .description("API for managing appointments and users")
                         .contact(new Contact()
-                                .name("Equipe de Arquitetura")
-                                .email("arquitetura@xyz.com")));
+                                .name("Development team")
+                                .email("devTeamSupport@xyz.com")));
     }
 }

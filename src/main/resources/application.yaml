@@ -27,6 +27,12 @@ spring:
     username: admin
     password: admin
 
+springdoc:
+  swagger-ui:
+    persistAuthorization: true
+    tags-sorter: alpha
+    operations-sorter: method
+
 logging:
   level:
     root=WARN:

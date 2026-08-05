@@ -1,6 +1,6 @@
 package com.hyuse98.scheduler.iam.application.usecase.impl;
 
-import com.hyuse98.scheduler.iam.UserRegisteredEvent;
+import com.hyuse98.scheduler.iam.application.events.UserRegisteredEvent;
 import com.hyuse98.scheduler.iam.application.dto.RegistrationRequest;
 import com.hyuse98.scheduler.iam.domain.model.aggregate.User;
 import com.hyuse98.scheduler.iam.domain.model.vo.Email;
@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class RegisterUsecaseImplTest {
+class RegisterUserUseCaseImplTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -39,7 +39,7 @@ class RegisterUsecaseImplTest {
     private ApplicationEventPublisher eventPublisher;
 
     @InjectMocks
-    private RegisterUsecaseImpl registerUsecase;
+    private RegisterUserUseCaseImpl registerUsecase;
 
     private RegistrationRequest validRequest;
 

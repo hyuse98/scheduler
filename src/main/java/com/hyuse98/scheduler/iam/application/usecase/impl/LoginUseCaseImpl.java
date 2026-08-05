@@ -11,12 +11,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginUsecaseImpl implements LoginUseCase {
+public class LoginUseCaseImpl implements LoginUseCase {
 
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
 
-    public LoginUsecaseImpl(AuthenticationManager authenticationManager, TokenService tokenService) {
+    public LoginUseCaseImpl(AuthenticationManager authenticationManager, TokenService tokenService) {
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
     }

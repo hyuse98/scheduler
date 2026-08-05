@@ -1,6 +1,6 @@
 package com.hyuse98.scheduler.iam.application.usecase.impl;
 
-import com.hyuse98.scheduler.iam.ServiceProviderRegisteredEvent;
+import com.hyuse98.scheduler.iam.application.events.ServiceProviderRegisteredEvent;
 import com.hyuse98.scheduler.iam.application.dto.RegistrationRequest;
 import com.hyuse98.scheduler.iam.application.usecase.RegisterServiceProviderUseCase;
 import com.hyuse98.scheduler.iam.domain.model.aggregate.User;

@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class LoginUsecaseImplTest {
+class LoginUseCaseImplTest {
 
     @Mock
     private AuthenticationManager authenticationManager;
@@ -28,7 +28,7 @@ class LoginUsecaseImplTest {
     private TokenService tokenService;
 
     @InjectMocks
-    private LoginUsecaseImpl loginUsecase;
+    private LoginUseCaseImpl loginUsecase;
 
     @Test
     void shouldLoginSuccessfully() {
