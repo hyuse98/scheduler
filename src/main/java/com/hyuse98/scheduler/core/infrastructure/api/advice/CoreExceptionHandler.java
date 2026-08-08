@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice(basePackages = "com.hyuse98.scheduler.core.infrastructure.api")
@@ -25,7 +23,7 @@ public class CoreExceptionHandler {
             ServiceProviderNotFoundException.class,
             ScheduleNotFoundException.class
     })
-    public ResponseEntity<Object> handleNotFoundExceptions(RuntimeException ex) {
+    public ResponseEntity<ErrorResponse> handleNotFoundExceptions(RuntimeException ex) {
         LOG.warn("Resource not found: {}", ex.getMessage());
         return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
@@ -35,26 +33,26 @@ public class CoreExceptionHandler {
             ClientAlreadyExistException.class,
             ServiceProviderAlreadyExistException.class
     })
-    public ResponseEntity<Object> handleAlreadyExistExceptions(RuntimeException ex) {
+    public ResponseEntity<ErrorResponse> handleAlreadyExistExceptions(RuntimeException ex) {
         LOG.warn("Resource already exists: {}", ex.getMessage());
         return buildErrorResponse(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     @ExceptionHandler(ClientCollectionEmpty.class)
-    public ResponseEntity<Object> handleClientCollectionEmpty(ClientCollectionEmpty ex) {
+    public ResponseEntity<ErrorResponse> handleClientCollectionEmpty(ClientCollectionEmpty ex) {
         LOG.warn(ex.getMessage());
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
         // Captura as validações do domínio (ex: agendamento no passado)
         LOG.warn("Domain validation error: {}", ex.getMessage());
         return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         String message = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -65,17 +63,18 @@ public class CoreExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleGeneralException(Exception ex) {
+    public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
         LOG.error("Internal Server Error Occurred: {}", ex.getMessage(), ex);
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error Occurred");
     }
 
-    private ResponseEntity<Object> buildErrorResponse(HttpStatus status, String message) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", status.value());
-        body.put("error", status.getReasonPhrase());
-        body.put("message", message);
-        return new ResponseEntity<>(body, status);
+    private ResponseEntity<ErrorResponse> buildErrorResponse(HttpStatus status, String message) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                status.value(),
+                status.getReasonPhrase(),
+                message
+        );
+        return new ResponseEntity<>(errorResponse, status);
     }
 }

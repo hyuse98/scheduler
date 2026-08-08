@@ -8,10 +8,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.media.Schema;
+import com.hyuse98.scheduler.iam.infrastructure.api.advice.ErrorResponse;
 
 import java.security.Principal;
 
-@Tag(name = "User Profile", description = "Endpoints para o perfil do usuário")
+@Tag(name = "User Profile", description = "Endpoints for user profile management")
 @PreAuthorize("hasRole('USER')")
 @RestController
 @RequestMapping("/api/v1/auth/client/me")
@@ -27,12 +29,12 @@ public class UserProfileController {
             @ApiResponse(
                     responseCode = "400",
                     description = "Validation error in the submitted payload",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "Internal server error",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             )
     })
     @GetMapping
@@ -50,12 +52,12 @@ public class UserProfileController {
             @ApiResponse(
                     responseCode = "400",
                     description = "Validation error in the submitted payload",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             ),
             @ApiResponse(
                     responseCode = "500",
                     description = "Internal server error",
-                    content = @Content
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             )
     })
     @PostMapping("/change-password")
