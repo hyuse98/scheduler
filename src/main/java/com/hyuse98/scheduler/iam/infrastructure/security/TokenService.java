@@ -2,7 +2,6 @@ package com.hyuse98.scheduler.iam.infrastructure.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -93,5 +92,17 @@ public class TokenService {
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    // Novo método para extrair as roles do token
+    public List<String> extractRoles(String token) {
+        return extractClaim(token, claims -> claims.get("roles", List.class));
+    }
+
+    // Nova validação focada apenas no token, sem depender do UserDetails do banco
+    public boolean isTokenValid(String token) {
+        // Apenas checa se não expirou. A assinatura já é validada
+        // automaticamente ao fazer o parse no extractAllClaims.
+        return !isTokenExpired(token);
     }
 }

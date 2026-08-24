@@ -2,6 +2,7 @@ package com.hyuse98.scheduler.iam.application.usecase.impl;
 
 import com.hyuse98.scheduler.iam.application.events.ServiceProviderRegisteredEvent;
 import com.hyuse98.scheduler.iam.application.dto.RegistrationRequest;
+import com.hyuse98.scheduler.iam.application.dto.UserProfileResponse;
 import com.hyuse98.scheduler.iam.application.usecase.RegisterServiceProviderUseCase;
 import com.hyuse98.scheduler.iam.domain.model.aggregate.User;
 import com.hyuse98.scheduler.iam.domain.model.vo.Email;
@@ -34,7 +35,7 @@ public class RegisterServiceProviderUseCaseImpl implements RegisterServiceProvid
 
     @Override
     @Transactional
-    public void execute(RegistrationRequest request) {
+    public UserProfileResponse execute(RegistrationRequest request) {
 
         if (userRepository.findByEmail(request.email()).isPresent()) {
             throw new EntityExistsException("Email already exists: " + request.email());
@@ -54,5 +55,11 @@ public class RegisterServiceProviderUseCaseImpl implements RegisterServiceProvid
                 savedUser.getId(),
                 savedUser.getEmail().getValue()
         ));
+
+        return new UserProfileResponse(
+                savedUser.getId(),
+                savedUser.getEmail().getValue(),
+                savedUser.getRoles().iterator().next().name()
+        );
     }
 }

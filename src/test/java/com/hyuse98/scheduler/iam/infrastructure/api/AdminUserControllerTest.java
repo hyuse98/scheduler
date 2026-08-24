@@ -48,7 +48,7 @@ class AdminUserControllerTest {
         
         when(getUsersUsecase.execute()).thenReturn(List.of(user));
 
-        mockMvc.perform(get("/api/v1/admin/user"))
+        mockMvc.perform(get("/api/v1/iam/admin/user"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(userId.toString()))
                 .andExpect(jsonPath("$[0].email").value("test@example.com"))

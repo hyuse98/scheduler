@@ -2,6 +2,7 @@ package com.hyuse98.scheduler.iam.infrastructure.api;
 
 import com.hyuse98.scheduler.iam.application.dto.UserProfileResponse;
 import com.hyuse98.scheduler.iam.application.dto.UserStatusRequest;
+import com.hyuse98.scheduler.iam.application.usecase.DeleteUserUseCase;
 import com.hyuse98.scheduler.iam.application.usecase.GetUsersUsecase;
 import com.hyuse98.scheduler.iam.application.usecase.impl.UpdateUserStatusUseCaseImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,10 +30,12 @@ public class AdminUserController {
 
     private final GetUsersUsecase getUsersUsecase;
     private final UpdateUserStatusUseCaseImpl updateUserStatusUseCaseImpl;
+    private final DeleteUserUseCase deleteUserUseCase;
 
-    public AdminUserController(GetUsersUsecase getUsersUsecase, UpdateUserStatusUseCaseImpl updateUserStatusUseCaseImpl) {
+    public AdminUserController(GetUsersUsecase getUsersUsecase, UpdateUserStatusUseCaseImpl updateUserStatusUseCaseImpl, DeleteUserUseCase deleteUserUseCase) {
         this.getUsersUsecase = getUsersUsecase;
         this.updateUserStatusUseCaseImpl = updateUserStatusUseCaseImpl;
+        this.deleteUserUseCase = deleteUserUseCase;
     }
 
     @Operation(summary = "List all users", description = "Returns a list containing the profiles of all system users")
@@ -74,16 +77,27 @@ public class AdminUserController {
 
     @Operation(summary = "Update user status", description = "Activates or deactivates a user's access by ID")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "User status updated successfully", content = @Content),
+            @ApiResponse(responseCode = "200", description = "User status updated successfully", content = @Content),
             @ApiResponse(responseCode = "404", description = "User not found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "409", description = "State conflict (if using strict state validation)", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     @PatchMapping("/{id}/status")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     public void updateUserStatus(
             @Parameter(description = "UUID of the user to be updated", required = true)
             @PathVariable("id") UUID id, @RequestBody UserStatusRequest request) {
         updateUserStatusUseCaseImpl.execute(id, request.active());
+    }
+
+    @Operation(summary = "Delete user", description = "Deletes a user from the system by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "User deleted successfully"),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteUser(@PathVariable UUID id) {
+        deleteUserUseCase.execute(id);
     }
 }

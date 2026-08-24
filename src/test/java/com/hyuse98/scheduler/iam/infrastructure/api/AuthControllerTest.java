@@ -4,9 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyuse98.scheduler.iam.application.dto.JwtResponse;
 import com.hyuse98.scheduler.iam.application.dto.LoginRequest;
 import com.hyuse98.scheduler.iam.application.dto.RegistrationRequest;
+import com.hyuse98.scheduler.iam.application.dto.UserProfileResponse;
 import com.hyuse98.scheduler.iam.application.usecase.LoginUseCase;
+import com.hyuse98.scheduler.iam.application.usecase.RegisterServiceProviderUseCase;
 import com.hyuse98.scheduler.iam.application.usecase.RegisterUseCase;
 import org.junit.jupiter.api.Test;
+import java.util.UUID;
 
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,6 +38,9 @@ class AuthControllerTest {
     private RegisterUseCase registerUseCase;
 
     @Mock
+    private RegisterServiceProviderUseCase registerServiceProviderUseCase;
+
+    @Mock
     private LoginUseCase loginUseCase;
 
     @InjectMocks
@@ -48,13 +54,37 @@ class AuthControllerTest {
     @Test
     void shouldRegisterUser() throws Exception {
         RegistrationRequest request = new RegistrationRequest("test@example.com", "Password123");
+        UUID userId = UUID.randomUUID();
+        UserProfileResponse profileResponse = new UserProfileResponse(userId, "test@example.com", "ROLE_USER");
 
-        mockMvc.perform(post("/api/auth/register")
+        when(registerUseCase.execute(any(RegistrationRequest.class))).thenReturn(profileResponse);
+
+        mockMvc.perform(post("/api/v1/iam/auth/register/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(userId.toString()))
+                .andExpect(jsonPath("$.email").value("test@example.com"));
 
         verify(registerUseCase).execute(any(RegistrationRequest.class));
+    }
+
+    @Test
+    void shouldRegisterServiceProvider() throws Exception {
+        RegistrationRequest request = new RegistrationRequest("provider@example.com", "Password123");
+        UUID providerId = UUID.randomUUID();
+        UserProfileResponse profileResponse = new UserProfileResponse(providerId, "provider@example.com", "ROLE_SERVICE_PROVIDER");
+
+        when(registerServiceProviderUseCase.execute(any(RegistrationRequest.class))).thenReturn(profileResponse);
+
+        mockMvc.perform(post("/api/v1/iam/auth/register/provider")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(providerId.toString()))
+                .andExpect(jsonPath("$.email").value("provider@example.com"));
+
+        verify(registerServiceProviderUseCase).execute(any(RegistrationRequest.class));
     }
 
     @Test
@@ -64,7 +94,7 @@ class AuthControllerTest {
 
         when(loginUseCase.execute(any(LoginRequest.class))).thenReturn(response);
 
-        mockMvc.perform(post("/api/auth/login")
+        mockMvc.perform(post("/api/v1/iam/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())

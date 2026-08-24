@@ -1,6 +1,7 @@
 package com.hyuse98.scheduler.core.infrastructure.api;
 
 import com.hyuse98.scheduler.core.application.dto.ClientResponse;
+import com.hyuse98.scheduler.core.application.usecases.client.DeleteClientUseCase;
 import com.hyuse98.scheduler.core.application.usecases.client.GetClientUseCase;
 import com.hyuse98.scheduler.core.application.usecases.client.ListClientUseCase;
 import com.hyuse98.scheduler.core.infrastructure.persistance.jpa.mapper.ClientEntityMapper;
@@ -16,9 +17,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,14 +36,17 @@ public class AdminClientController {
 
     private final ListClientUseCase listClientUseCase;
     private final GetClientUseCase getClientUseCase;
+    private final DeleteClientUseCase deleteClientUseCase;
     private final ClientEntityMapper clientEntityMapper;
 
     public AdminClientController(
             ListClientUseCase listClientUseCase,
             GetClientUseCase getClientUseCase,
+            DeleteClientUseCase deleteClientUseCase,
             ClientEntityMapper clientEntityMapper) {
         this.listClientUseCase = listClientUseCase;
         this.getClientUseCase = getClientUseCase;
+        this.deleteClientUseCase = deleteClientUseCase;
         this.clientEntityMapper = clientEntityMapper;
     }
 
@@ -68,5 +75,16 @@ public class AdminClientController {
     public ResponseEntity<ClientResponse> getClientById(@PathVariable UUID id) {
         var client = getClientUseCase.execute(id);
         return ResponseEntity.ok(clientEntityMapper.toResponse(client));
+    }
+
+    @Operation(summary = "Excluir um cliente", description = "Deleta fisicamente um cliente do sistema")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Cliente excluído com sucesso"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteClient(@PathVariable UUID id) {
+        deleteClientUseCase.execute(id);
     }
 }
