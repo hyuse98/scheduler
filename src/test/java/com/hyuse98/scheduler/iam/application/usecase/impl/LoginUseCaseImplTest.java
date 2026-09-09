@@ -2,7 +2,11 @@ package com.hyuse98.scheduler.iam.application.usecase.impl;
 
 import com.hyuse98.scheduler.iam.application.dto.JwtResponse;
 import com.hyuse98.scheduler.iam.application.dto.LoginRequest;
+import com.hyuse98.scheduler.iam.domain.model.aggregate.User;
+import com.hyuse98.scheduler.iam.infrastructure.config.RefreshTokenService;
+import com.hyuse98.scheduler.iam.infrastructure.persistence.jpa.entity.RefreshToken;
 import com.hyuse98.scheduler.iam.infrastructure.security.TokenService;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +31,9 @@ class LoginUseCaseImplTest {
     @Mock
     private TokenService tokenService;
 
+    @Mock
+    private RefreshTokenService refreshTokenService;
+
     @InjectMocks
     private LoginUseCaseImpl loginUsecase;
 
@@ -34,18 +41,25 @@ class LoginUseCaseImplTest {
     void shouldLoginSuccessfully() {
         LoginRequest request = new LoginRequest("test@example.com", "password");
         Authentication authentication = mock(Authentication.class);
-        UserDetails userDetails = mock(UserDetails.class);
+        User user = mock(User.class);
+        UUID userId = UUID.randomUUID();
+        RefreshToken refreshToken = new RefreshToken();
+        refreshToken.setToken("dummy_refresh_token");
         
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(userDetails);
-        when(tokenService.generateToken(userDetails)).thenReturn("dummy_token");
+        when(authentication.getPrincipal()).thenReturn(user);
+        when(user.getId()).thenReturn(userId);
+        when(tokenService.generateToken(user)).thenReturn("dummy_token");
+        when(refreshTokenService.createRefreshToken(userId)).thenReturn(refreshToken);
 
         JwtResponse response = loginUsecase.execute(request);
 
         assertNotNull(response);
         assertEquals("dummy_token", response.token());
+        assertEquals("dummy_refresh_token", response.refreshToken());
         
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(tokenService).generateToken(userDetails);
+        verify(tokenService).generateToken(user);
+        verify(refreshTokenService).createRefreshToken(userId);
     }
 }

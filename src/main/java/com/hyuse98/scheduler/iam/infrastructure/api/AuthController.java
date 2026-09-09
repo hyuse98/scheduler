@@ -1,12 +1,15 @@
 package com.hyuse98.scheduler.iam.infrastructure.api;
 
-import com.hyuse98.scheduler.iam.application.dto.JwtResponse;
-import com.hyuse98.scheduler.iam.application.dto.LoginRequest;
-import com.hyuse98.scheduler.iam.application.dto.RegistrationRequest;
-import com.hyuse98.scheduler.iam.application.dto.UserProfileResponse;
+import com.hyuse98.scheduler.iam.application.dto.*;
 import com.hyuse98.scheduler.iam.application.usecase.LoginUseCase;
 import com.hyuse98.scheduler.iam.application.usecase.RegisterServiceProviderUseCase;
 import com.hyuse98.scheduler.iam.application.usecase.RegisterUseCase;
+import com.hyuse98.scheduler.iam.domain.model.aggregate.User;
+import com.hyuse98.scheduler.iam.infrastructure.api.advice.ErrorResponse;
+import com.hyuse98.scheduler.iam.infrastructure.config.RefreshTokenService;
+import com.hyuse98.scheduler.iam.infrastructure.persistence.jpa.entity.RefreshToken;
+import com.hyuse98.scheduler.iam.infrastructure.persistence.jpa.mapper.UserMapper;
+import com.hyuse98.scheduler.iam.infrastructure.security.TokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,12 +17,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import jakarta.validation.Valid;
-import com.hyuse98.scheduler.iam.infrastructure.api.advice.ErrorResponse;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import java.net.URI;
 
 @Tag(name = "Authentication", description = "Endpoints for Login and Registration")
@@ -31,14 +36,42 @@ public class AuthController {
     private final RegisterUseCase registerUseCase;
     private final RegisterServiceProviderUseCase registerServiceProviderUseCase;
     private final LoginUseCase loginUseCase;
+    private final RefreshTokenService refreshTokenService;
+    private final TokenService tokenService;
+    private final UserMapper userMapper;
 
     public AuthController(
             RegisterUseCase registerUseCase,
             RegisterServiceProviderUseCase registerServiceProviderUseCase,
-            LoginUseCase loginUseCase) {
+            LoginUseCase loginUseCase, RefreshTokenService refreshTokenService, TokenService tokenService, UserMapper userMapper) {
         this.registerUseCase = registerUseCase;
         this.registerServiceProviderUseCase = registerServiceProviderUseCase;
         this.loginUseCase = loginUseCase;
+        this.refreshTokenService = refreshTokenService;
+        this.tokenService = tokenService;
+        this.userMapper = userMapper;
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshtoken(@RequestBody TokenRefreshRequest request) {
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshTokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+
+                    if (!user.isEnabled()) {
+                        throw new RuntimeException("Usuário desativado!");
+                    }
+
+                    User domainUser = userMapper.toDomain(user);
+
+                    String token = tokenService.generateToken(domainUser);
+                    return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+
+                })
+                .orElseThrow(() -> new RuntimeException("Refresh token não encontrado!"));
     }
 
     @Operation(summary = "Log in", description = "Authenticates the user using email and password, returning a JWT token")

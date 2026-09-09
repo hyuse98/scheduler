@@ -8,6 +8,9 @@ import com.hyuse98.scheduler.iam.application.dto.UserProfileResponse;
 import com.hyuse98.scheduler.iam.application.usecase.LoginUseCase;
 import com.hyuse98.scheduler.iam.application.usecase.RegisterServiceProviderUseCase;
 import com.hyuse98.scheduler.iam.application.usecase.RegisterUseCase;
+import com.hyuse98.scheduler.iam.infrastructure.config.RefreshTokenService;
+import com.hyuse98.scheduler.iam.infrastructure.security.TokenService;
+import com.hyuse98.scheduler.iam.infrastructure.persistence.jpa.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
 import java.util.UUID;
 
@@ -42,6 +45,15 @@ class AuthControllerTest {
 
     @Mock
     private LoginUseCase loginUseCase;
+
+    @Mock
+    private RefreshTokenService refreshTokenService;
+
+    @Mock
+    private TokenService tokenService;
+
+    @Mock
+    private UserMapper userMapper;
 
     @InjectMocks
     private AuthController authController;
@@ -90,7 +102,7 @@ class AuthControllerTest {
     @Test
     void shouldLoginUser() throws Exception {
         LoginRequest request = new LoginRequest("test@example.com", "Password123");
-        JwtResponse response = new JwtResponse("mock_token");
+        JwtResponse response = new JwtResponse("mock_token", "mock_refresh");
 
         when(loginUseCase.execute(any(LoginRequest.class))).thenReturn(response);
 
