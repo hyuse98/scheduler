@@ -1,6 +1,8 @@
 package com.hyuse98.scheduler.iam.infrastructure.config;
 
 import com.hyuse98.scheduler.iam.infrastructure.security.JwtAuthFilter;
+import com.hyuse98.scheduler.iam.infrastructure.security.RateLimitFilter;
+import com.hyuse98.scheduler.iam.infrastructure.security.RateLimitService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -15,11 +17,28 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtFilter;
+    private final RateLimitService rateLimitService;
     private final AuthenticationProvider authenticationProvider;
 
-    public SecurityConfig(JwtAuthFilter jwtFilter, AuthenticationProvider authenticationProvider) {
+    public SecurityConfig(
+            JwtAuthFilter jwtFilter,
+            RateLimitService rateLimitService,
+            AuthenticationProvider authenticationProvider
+    ) {
         this.jwtFilter = jwtFilter;
+        this.rateLimitService = rateLimitService;
         this.authenticationProvider = authenticationProvider;
+    }
+
+    /**
+     * RateLimitFilter is created as a @Bean here (not @Component) to ensure it is
+     * registered ONLY inside the Spring Security filter chain — preventing Spring Boot's
+     * automatic servlet-level registration which would cause double execution and
+     * interfere with the security context.
+     */
+    @Bean
+    public RateLimitFilter rateLimitFilter() {
+        return new RateLimitFilter(rateLimitService);
     }
 
     @Bean
@@ -41,7 +60,8 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(rateLimitFilter(), JwtAuthFilter.class);
 
         return http.build();
     }

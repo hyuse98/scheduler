@@ -71,6 +71,12 @@ dependencies {
 	implementation("org.mapstruct:mapstruct:1.6.3")
 	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
+	//Rate Limiting
+	implementation("com.bucket4j:bucket4j_jdk17-core:8.14.0")
+	implementation("com.bucket4j:bucket4j_jdk17-lettuce:8.14.0")
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
+
 	//Dev
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")
@@ -105,7 +111,6 @@ openApi {
 	outputFileName.set("openapi.json")
 	waitTimeInSeconds.set(30)
 }
-
 
 tasks.withType<Test> {
 	useJUnitPlatform()
